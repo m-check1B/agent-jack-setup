@@ -1,0 +1,9 @@
+# VERSIONS: the tested combination
+
+`versions.env` is the machine-readable source of truth; `bin/doctor.sh` fails (AJ-*-02) when an installed version drifts from it.
+
+**Release rule:** a combination is published here only after it has run on our own estate and passed our tests, and after one clean install by a fresh agent from this public repo alone ended with DOCTOR all PASS. Users upgrade only by moving to a new tag of this repo.
+
+| Setup tag | Date | T3 Code (fork) | Tentacles | estate-guardian (classify standard, guard optional) | Claude Code CLI | Agent Jack desktop | Tested on | Co je nového / What's new |
+|---|---|---|---|---|---|---|---|---|
+| v1.0.0 | pending | v0.0.42-tplus.2 (T3 Code TPLUS, 0.0.42 @ 6d8dfb7f + turn-result patch; not notarized, no update feed) | v0.4.1-jack.1 | v1.0.0 (estate-classify 0.3.0) | ≥ 2.1.302 | ≥ 3.17.41 | pending: our estate + fresh-agent clean install (macOS) | first public combination |
