@@ -60,7 +60,7 @@ done
 if [ -n "$STRAY" ]; then rec FAIL AJ-ENV-01 claude-env "${STRAY# }" "no ANTHROPIC_* override" "REPAIR.md AJ-ENV-01"
 else rec PASS AJ-ENV-00 claude-env clean "no ANTHROPIC_* override" shell; fi
 # 3c Claude answers headless (60 s limit; one tiny request)
-if [ -n "$CV" ] && [ -z "$STRAY" ]; then
+if [ -n "$CV" ] && [ -z "$STRAY" ] && claude auth status >/dev/null 2>&1; then
   if [ "$(perl -e 'alarm 60; exec @ARGV' claude -p "Reply with exactly: OK" </dev/null 2>/dev/null | tr -d '[:space:]')" = OK ]; then rec PASS AJ-CLAUDE-05 claude-reply OK OK claude
   else rec FAIL AJ-CLAUDE-04 claude-reply "no-OK-in-60s" OK "REPAIR.md AJ-CLAUDE-04"; fi
 fi

@@ -17,7 +17,7 @@ Run `bin/doctor.sh`, find the code, apply the fix (ask the user before any chang
 | AJ-CLAUDE-02 | Claude Code CLI older than the minimum | `bin/install.sh claude` (or `claude update`) | doctor |
 | AJ-CLAUDE-03 | CLI signed out | The user runs `claude auth login` and signs in with their Claude Pro account | `claude auth status` |
 | AJ-ENV-01 | A shell file or the environment sets ANTHROPIC_BASE_URL / ANTHROPIC_AUTH_TOKEN / ANTHROPIC_API_KEY. It silently overrides your Claude sign-in (e.g. another provider), and `claude -p` can hang | Show the user the file and line name (never the value). With their OK, comment out that line, open a new terminal and re-run doctor. Never copy or print the value | doctor AJ-ENV-00 |
-| AJ-CLAUDE-04 | `claude -p "Reply with exactly: OK"` gave no OK within 60 s | Fix AJ-ENV-01 first. Then the user runs `claude auth logout && claude auth login` (over ssh: open the link, paste the code into the same terminal) and re-runs doctor | doctor AJ-CLAUDE-05 |
+| AJ-CLAUDE-04 | `claude -p "Reply with exactly: OK"` gave no OK within 60 s (only tested once signed in) | Fix AJ-CLAUDE-03 and AJ-ENV-01 first. Then the user runs `claude auth logout && claude auth login` (over ssh: open the link, paste the code into the same terminal) and re-runs doctor | doctor AJ-CLAUDE-05 |
 | AJ-BROWSER-01 (manual) | Claude Code reports "no connected browser" | BROWSER.md: install the official Claude in Chrome extension (publisher Anthropic) in the right Chrome profile, pin it via 🧩, and sign in with the SAME Claude account as Claude Code. After an account switch, reinstall it | Claude Code lists ≥1 connected browser |
 | AJ-CODEX-01 (optional) | Codex CLI is signed out | The user runs `codex login` themselves | `codex login status` |
 | AJ-T3-01 | T3 Code missing | `bin/install.sh t3` | doctor AJ-T3-00 |
@@ -27,7 +27,7 @@ Run `bin/doctor.sh`, find the code, apply the fix (ask the user before any chang
 | AJ-T3-04 | Downloaded T3 doesn't match the checksum | Don't install. Delete the download and retry once. If it fails again, stop and report | — |
 | AJ-TENT-01 | Tentacles missing | `bin/install.sh tentacles` | `tentacles --version` |
 | AJ-TENT-02 | Tentacles version ≠ pin | `bin/install.sh tentacles` | doctor |
-| AJ-TENT-03 | `tentacles doctor` not ready | Make sure T3 Code is running and Claude Code is signed in to it (T3 → Settings → Providers), then re-run doctor. If it's still not ready, stop and report | doctor AJ-TENT-00 |
+| AJ-TENT-03 | `tentacles doctor` not ready (often "T3 token file … missing" until T3 Code TPLUS has been opened once) | Make sure T3 Code TPLUS is running and Claude Code is signed in to it (T3 → Settings → Providers), then re-run doctor. If it's still not ready, stop and report | doctor AJ-TENT-00 |
 | AJ-PY-01 | Python older than 3.11 (macOS ships 3.9) | `brew install python@3.12`, then `bin/install.sh classify` | `python3.12 --version` |
 | AJ-EC-01 | estate-classify (classifier + router for Tentacles) not installed | `bin/install.sh classify` (venv in `~/.agent-jack/venv`) | doctor AJ-EC-00 |
 | AJ-EC-02 | estate-classify version ≠ pin | `bin/install.sh classify` | doctor |
