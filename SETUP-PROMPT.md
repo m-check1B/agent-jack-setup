@@ -31,7 +31,7 @@ Po souhlasu:
 ```bash
 mkdir -p ~/Developer && cd ~/Developer
 git clone https://github.com/m-check1B/agent-jack-setup.git
-cd agent-jack-setup && git checkout v1.0.1
+cd agent-jack-setup && git checkout v1.0.2
 ```
 Pak si přečti `AGENTS.md` a od teď se jím řiď.
 
@@ -39,8 +39,8 @@ Pak si přečti `AGENTS.md` a od teď se jím řiď.
 Spusť `bin/doctor.sh` a lidsky mi shrň, co je PASS a co FAIL.
 
 ## Krok 4: Instalace
-1. Po souhlasu `bin/install.sh all`. Nainstaluje Claude Code CLI, náš T3 Code TPLUS, Tentacles a estate-guardian (klasifikátor + router pro Tentacles) v přesných verzích. (Když chybí Python 3.11+, řiď se `REPAIR.md` AJ-PY-01.) Je bezpečné ho pustit znovu.
-2. Přihlášení dělám já: `claude auth login` (otevře se prohlížeč, přihlásím se svým Claude Pro). Pak otevřu **T3 Code TPLUS** (poprvé pravým tlačítkem → **Otevřít**, aplikace zatím není notarizovaná; nebo Nastavení systému → Soukromí a zabezpečení → Přesto otevřít) a v **Settings → Providers** zkontroluju, že je **Claude Code** připravený.
+1. Po souhlasu `bin/install.sh all`. Nainstaluje Claude Code CLI, Codex CLI, náš T3 Code TPLUS, Tentacles a estate-guardian (klasifikátor + router pro Tentacles) v přesných verzích. (Když chybí Python 3.11+, řiď se `REPAIR.md` AJ-PY-01.) Je bezpečné ho pustit znovu.
+2. Přihlášení dělám já: `claude auth login` (otevře se prohlížeč, přihlásím se svým Claude Pro) a, pokud mám předplatné ChatGPT, `codex login`. Pak otevřu **T3 Code TPLUS** (poprvé pravým tlačítkem → **Otevřít**, aplikace zatím není notarizovaná; nebo Nastavení systému → Soukromí a zabezpečení → Přesto otevřít) a v **Settings → Providers** zkontroluju, že je **Claude Code** připravený.
 3. Volitelně (zeptej se mě): `bin/install.sh guardian` (samotný hlídač estate-guardian, pro pokročilé; jen stažení, trvalé hlídání se nezapíná).
 4. Znovu `bin/doctor.sh`. Každý FAIL oprav podle `REPAIR.md` a ověř dalším doctorem.
 
@@ -51,7 +51,7 @@ Spusť `bin/doctor.sh` a lidsky mi shrň, co je PASS a co FAIL.
 
 ## Krok 6: Spárování a Bot na Local
 1. V aplikaci **Settings → Computers & labs** → **Pair this Mac … so agents can use its labs** (souhlas potvrdím sám). Cíl: **Paired · ready**.
-2. **V aplikaci** otevřu Bota → ozubené kolečko → **Provider** → **Local** → **Claude Code** → **Start new session** → napíšu „Ahoj, odpověz jen slovem OK.“
+2. **V aplikaci** otevřu Bota → ozubené kolečko → **Provider** → **Local** → **Claude Code** → **Start new session** → napíšu „Ahoj, odpověz jen slovem OK.“ Pokud mám Codex, totéž s **Local** → **Codex**.
 
 ## Krok 6b (volitelné): Prohlížeč
 Zeptej se mě, jestli chci, abys pracoval i v mém prohlížeči. Pokud ano, proveď mě [BROWSER.md](BROWSER.md): oficiální rozšíření Claude in Chrome (vydavatel Anthropic), správný profil Chrome, připnutí, přihlášení **stejným účtem Claude**. Pak ověř, že vidíš aspoň jeden připojený prohlížeč.

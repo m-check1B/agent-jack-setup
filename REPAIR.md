@@ -19,7 +19,9 @@ Run `bin/doctor.sh`, find the code, apply the fix (ask the user before any chang
 | AJ-ENV-01 | A shell file or the environment sets ANTHROPIC_BASE_URL / ANTHROPIC_AUTH_TOKEN / ANTHROPIC_API_KEY. It silently overrides your Claude sign-in (e.g. another provider), and `claude -p` can hang | Show the user the file and line name (never the value). With their OK, comment out that line, open a new terminal and re-run doctor. Never copy or print the value | doctor AJ-ENV-00 |
 | AJ-CLAUDE-04 | `claude -p "Reply with exactly: OK"` gave no OK within 60 s (only tested once signed in) | Fix AJ-CLAUDE-03 and AJ-ENV-01 first. Then the user runs `claude auth logout && claude auth login` (over ssh: open the link, paste the code into the same terminal) and re-runs doctor | doctor AJ-CLAUDE-05 |
 | AJ-BROWSER-01 (manual) | Claude Code reports "no connected browser" | BROWSER.md: install the official Claude in Chrome extension (publisher Anthropic) in the right Chrome profile, pin it via 🧩, and sign in with the SAME Claude account as Claude Code. After an account switch, reinstall it | Claude Code lists ≥1 connected browser |
-| AJ-CODEX-01 (optional) | Codex CLI is signed out | The user runs `codex login` themselves | `codex login status` |
+| AJ-CODEX-01 | Codex CLI missing | `bin/install.sh codex` | doctor AJ-CODEX-00 |
+| AJ-CODEX-02 | Codex CLI older than the minimum | `bin/install.sh codex` | doctor AJ-CODEX-00 |
+| AJ-CODEX-03 (WARN) | Codex CLI signed out (the "Local · Codex" lab is optional; it needs a ChatGPT plan) | The user runs `codex login` and signs in with their OWN ChatGPT plan on this machine | `codex login status` |
 | AJ-T3-01 | T3 Code missing | `bin/install.sh t3` | doctor AJ-T3-00 |
 | AJ-T3-02 | T3 Code version ≠ pin (often after an upstream update) | `bin/install.sh t3` (quits T3, reinstalls the pinned fork) | doctor |
 | AJ-T3-05 (manual) | macOS says T3 Code TPLUS "can't be opened" / unidentified developer | The build isn't notarized yet. The user right-clicks the app → **Open**, or System Settings → Privacy & Security → **Open Anyway**. Never disable Gatekeeper | the app opens |

@@ -48,6 +48,12 @@ if [ -z "$CV" ]; then rec FAIL AJ-CLAUDE-01 claude-cli missing ">=$CLAUDE_CLI_MI
 elif ! ge "$CV" "$CLAUDE_CLI_MIN"; then rec FAIL AJ-CLAUDE-02 claude-cli "$CV" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code
 elif claude auth status >/dev/null 2>&1; then rec PASS AJ-CLAUDE-00 claude-cli "$CV signed-in" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code
 else rec FAIL AJ-CLAUDE-03 claude-cli "$CV signed-out" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code; fi
+# 3a Codex CLI (minimum version; the "Local · Codex" lab; signed in locally with the user's own plan)
+XV2="$(ver codex --version)"
+if [ -z "$XV2" ]; then rec FAIL AJ-CODEX-01 codex-cli missing ">=$CODEX_CLI_MIN" npm:@openai/codex
+elif ! ge "$XV2" "$CODEX_CLI_MIN"; then rec FAIL AJ-CODEX-02 codex-cli "$XV2" ">=$CODEX_CLI_MIN" npm:@openai/codex
+elif codex login status >/dev/null 2>&1; then rec PASS AJ-CODEX-00 codex-cli "$XV2 signed-in" ">=$CODEX_CLI_MIN" npm:@openai/codex
+else rec WARN AJ-CODEX-03 codex-cli "$XV2 signed-out (optional lab)" ">=$CODEX_CLI_MIN" npm:@openai/codex; fi
 # 3b stray API overrides (they silently replace your Claude sign-in; names only, values never printed)
 STRAY=""
 for v in ANTHROPIC_BASE_URL ANTHROPIC_AUTH_TOKEN ANTHROPIC_API_KEY; do

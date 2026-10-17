@@ -42,7 +42,7 @@ Agent Jack může pouštět Boty i přímo na vašem počítači, přes vaše vl
 
 **Oprava:** když něco přestane fungovat, otevřete Claude Code a napište: „oprav mi nastavení Agent Jacka podle github.com/m-check1B/agent-jack-setup“. Claude spustí `bin/doctor.sh` a opraví chyby podle [REPAIR.md](REPAIR.md).
 
-**Prohlížeč pro agenty (volitelné):** rozšíření Claude in Chrome a Codex CLI, viz [BROWSER.md](BROWSER.md).
+**Prohlížeč pro agenty (volitelné):** rozšíření Claude in Chrome, viz [BROWSER.md](BROWSER.md). **Codex CLI** instaluje `install.sh` vždy; přihlášení `codex login` je volitelné (vlastní předplatné ChatGPT) a zapne lab „Local · Codex“.
 
 ### Doporučené nástroje (volitelné)
 Jen doporučení: `install.sh` je neinstaluje a DOCTOR je nekontroluje. Všechno z oficiálních zdrojů, s vlastním účtem.
@@ -100,7 +100,7 @@ Agent Jack can also run Bots on your own computer, on your own AI subscription.
 
 **For agents:** start at [AGENTS.md](AGENTS.md).
 
-**Browser for agents (optional):** the Claude in Chrome extension and the Codex CLI, see [BROWSER.md](BROWSER.md).
+**Browser for agents (optional):** the Claude in Chrome extension, see [BROWSER.md](BROWSER.md). **Codex CLI** is always installed by `install.sh`; signing in with `codex login` is optional (your own ChatGPT plan) and enables the "Local · Codex" lab.
 
 ### Recommended tools (optional)
 Recommendations only: `install.sh` doesn't install them and DOCTOR doesn't check them. All from official sources, with your own account.

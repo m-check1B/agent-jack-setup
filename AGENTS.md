@@ -17,7 +17,7 @@ bin/doctor.sh            # read-only; PASS/FAIL per component with a stable code
 → for each FAIL: REPAIR.md <code>  (or bin/install.sh <component>)
 → bin/doctor.sh          # repeat until no FAIL, or stop and report
 ```
-- Fresh install: `bin/install.sh all` (Claude CLI, T3 Code TPLUS, Tentacles, estate-classify; optionally `bin/install.sh guardian` for the guard checkout), then the manual app steps in `SETUP-PROMPT.md` steps 5–6.
+- Fresh install: `bin/install.sh all` (Claude CLI, Codex CLI, T3 Code TPLUS, Tentacles, estate-classify; optionally `bin/install.sh guardian` for the guard checkout), then the manual app steps in `SETUP-PROMPT.md` steps 5–6.
 - Roll back: `bin/rollback.sh <setup-tag>` (tags in `VERSIONS.md`).
 - Remove: `bin/uninstall.sh` (lists first; deletes only with `--yes`).
 - Windows: no scripts yet (unproven). Follow `SETUP-PROMPT-WINDOWS.md` and report with its DOCTOR block.

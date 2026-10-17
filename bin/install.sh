@@ -1,6 +1,6 @@
 #!/bin/bash
 # agent-jack-setup INSTALL (macOS). Idempotent: brings each component to the exact pin in versions.env.
-# Usage: bin/install.sh <claude|t3|tentacles|classify|guardian|all>   (all = claude t3 tentacles classify; guardian = optional 5-min guard checkout)
+# Usage: bin/install.sh <claude|codex|t3|tentacles|classify|guardian|all>   (all = claude codex t3 tentacles classify; guardian = optional 5-min guard checkout)
 # Functions are do_<component> so they never shadow the real commands (v1.0.0 recursed on `tentacles`).
 # Never uses sudo; never touches secrets; downloads only from the public URLs in versions.env.
 set -euo pipefail
@@ -18,6 +18,14 @@ do_claude() {
   if [ -n "$cur" ] && [ "$(printf '%s\n%s\n' "$CLAUDE_CLI_MIN" "$cur" | sort -V | head -1)" = "$CLAUDE_CLI_MIN" ]; then echo "ok claude-cli $cur (>= $CLAUDE_CLI_MIN)"; return; fi
   npm install -g "@anthropic-ai/claude-code@$CLAUDE_CLI_MIN" || die AJ-CLAUDE-01 "npm install failed (EACCES: see REPAIR.md AJ-NPM-01)"
   echo "ok claude-cli $CLAUDE_CLI_MIN (sign in yourself: claude auth login)"
+}
+
+do_codex() {
+  command -v npm >/dev/null || die AJ-NODE-01 "node/npm missing (brew install node)"
+  cur="$(ver codex --version || true)"
+  if [ -n "$cur" ] && [ "$(printf '%s\n%s\n' "$CODEX_CLI_MIN" "$cur" | sort -V | head -1)" = "$CODEX_CLI_MIN" ]; then echo "ok codex-cli $cur (>= $CODEX_CLI_MIN)"; return; fi
+  npm install -g "@openai/codex@$CODEX_CLI_MIN" || die AJ-CODEX-01 "npm install failed (EACCES: see REPAIR.md AJ-NPM-01)"
+  echo "ok codex-cli $CODEX_CLI_MIN (sign in yourself: codex login)"
 }
 
 do_t3() {
@@ -76,8 +84,8 @@ do_guardian() {
 free_gb=$(( $(df -k "$HOME" | awk 'NR==2{print $4}') / 1048576 ))
 [ "$free_gb" -ge "$DISK_FAIL_GB" ] || die AJ-DISK-02 "only ${free_gb} GB free; need at least $DISK_FAIL_GB GB (recommended $DISK_WARN_GB GB). See REPAIR.md AJ-DISK-02"
 case "${1:-}" in
-  claude) do_claude ;; t3) do_t3 ;; tentacles) do_tentacles ;; classify) do_classify ;; guardian) do_guardian ;;
-  all) do_claude; do_t3; do_tentacles; do_classify ;;
-  *) echo "usage: bin/install.sh <claude|t3|tentacles|classify|guardian|all>"; exit 2 ;;
+  claude) do_claude ;; codex) do_codex ;; t3) do_t3 ;; tentacles) do_tentacles ;; classify) do_classify ;; guardian) do_guardian ;;
+  all) do_claude; do_codex; do_t3; do_tentacles; do_classify ;;
+  *) echo "usage: bin/install.sh <claude|codex|t3|tentacles|classify|guardian|all>"; exit 2 ;;
 esac
 echo "next: bin/doctor.sh"
