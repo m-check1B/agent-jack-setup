@@ -19,18 +19,23 @@ Since v1.0.3 the release proof is an early person's **own computer**, with the F
 - The person's Mac (macOS ≥ 13) with an admin account, ≥ 20 GB free, the power cable connected, and a working Time Machine or other backup (step 0).
 - Their own Claude plan (Pro/Max) for Claude Code. Optionally, their own ChatGPT plan for Codex.
 - Their Agent Jack account (Google or the email and password from the welcome mail), plus their phone for 2FA.
-- The Claude app from https://claude.com/download, signed in, **Code** tab open (README steps 1–3), with the whole SETUP-PROMPT.md text pasted in.
+- The Claude app from https://claude.com/download, signed in, **Code** tab open, model **Sonnet**, effort **high** (README steps 1–3), with the whole SETUP-PROMPT.md text pasted in.
 
-**The person does these themselves (their 2FA, their passwords)**
-1. Their Mac admin password (Homebrew, macOS "Open Anyway").
+**The person does these themselves (their passwords, their 2FA, their clicks)**
+1. Their Mac admin password (Homebrew) and "Open Anyway" in System Settings → Privacy & Security.
 2. `claude auth login` in their browser, and `codex login` if they use Codex.
-3. Signing in to Agent Jack in the web app and the desktop app.
-4. Approving the pairing (Settings → Computers & labs → Pair this Mac).
+3. Opening T3 Code TPLUS once and checking Settings → Providers → Claude Code (step 4).
+4. Downloading Agent Jack from https://agentjack.kraliki.com/downloads, dragging it to Applications and signing in on the web and in the app (step 5).
+5. Approving the pairing (Settings → Computers & labs → Pair this Mac), then Bot → Provider → Local → Claude Code → one message (step 6).
 
-**Claude does the rest**: backup check, `bin/doctor.sh`, `bin/install.sh all`, opens T3 Code TPLUS once, checks that Tentacles is ready, gets one Local Bot reply, then runs `bin/doctor.sh` again.
+**Claude does the rest**: the backup and disk check, `bin/doctor.sh`, `bin/install.sh all`, the dmg shasum check, guiding each of the person's steps, and the final `bin/doctor.sh` with the two manual lines (step 7).
+
+**What counts as the proof ("all PASS")**
+- The final `bin/doctor.sh` has **no FAIL**. AJ-PAIR-00, AJ-LOCAL-00 and AJ-BROWSER-00 always print SKIP (they are checked by hand). AJ-CODEX-03 (Codex signed out) and AJ-BAK-01 (backup other than a recent Time Machine) may be WARN.
+- The two manual lines say pairing = **Paired · ready** and Local Bot replied = **yes**.
 
 **Saving the proof**
-- Run `bin/doctor.sh > ~/Desktop/agent-jack-doctor.txt; cat ~/Desktop/agent-jack-doctor.txt` and add the two manual lines (pairing, Local Bot replied yes/no), as in SETUP-PROMPT step 7.
+- Run `bin/doctor.sh > ~/Desktop/agent-jack-doctor.txt; cat ~/Desktop/agent-jack-doctor.txt` and add the two manual lines, as in SETUP-PROMPT step 7.
 - Check it has no passwords, keys, emails or home-folder names, then send it in reply to the welcome mail.
-- All PASS → the release row above gets `Tested on: assisted install, macOS <ver> <arch>, DOCTOR all PASS (date)`. Any FAIL → a [REPAIR.md](REPAIR.md) "Real cases" entry (date, code, symptom, cause, fix) and a fix in the next tag.
+- Proof met → the release row above gets `Tested on: assisted install, macOS <ver> <arch>, DOCTOR no FAIL + paired + Local Bot reply (date)`. Any FAIL → a [REPAIR.md](REPAIR.md) "Real cases" entry (date, code, symptom, cause, fix) and a fix in the next tag.
 - Windows stays "not yet proven" until one of these sittings runs on Windows ([SETUP-PROMPT-WINDOWS.md](SETUP-PROMPT-WINDOWS.md)).
