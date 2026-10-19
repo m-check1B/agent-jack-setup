@@ -31,7 +31,7 @@ Po souhlasu:
 ```bash
 mkdir -p ~/Developer && cd ~/Developer
 git clone https://github.com/m-check1B/agent-jack-setup.git
-cd agent-jack-setup && git checkout v1.0.2
+cd agent-jack-setup && git checkout v1.0.3
 ```
 Pak si přečti `AGENTS.md` a od teď se jím řiď.
 
