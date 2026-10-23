@@ -30,6 +30,14 @@ else BD="${TMOUT_%-*}"; AGE=$(( ( $(date +%s) - $(date -j -f %Y-%m-%d "$BD" +%s)
   if [ "$AGE" -le 7 ]; then rec PASS AJ-BAK-00 backup "time-machine $BD" "backup <= 7 days" "Time Machine"
   else rec WARN AJ-BAK-01 backup "time-machine $BD (${AGE}d old)" "backup <= 7 days" "Time Machine (REPAIR.md AJ-BAK-01)"; fi
 fi
+# 0a recommended hardware (WARN only): Apple M3 or later, 16 GB RAM, 512 GB disk
+CHIP="$(sysctl -n machdep.cpu.brand_string 2>/dev/null)"; MEM_GB=$(( $(sysctl -n hw.memsize 2>/dev/null || echo 0) / 1073741824 ))
+DISK_GB=$(( $(df -k / | awk 'NR==2{print $2}') * 1024 / 1000000000 ))
+MGEN="$(printf '%s' "$CHIP" | sed -nE 's/^Apple M([0-9]+).*/\1/p')"
+HWLOW=""; { [ -z "$MGEN" ] || [ "$MGEN" -lt 3 ]; } && HWLOW="$HWLOW chip"
+[ "$MEM_GB" -lt 16 ] && HWLOW="$HWLOW ram"; [ "$DISK_GB" -lt 460 ] && HWLOW="$HWLOW disk"   # a 512 GB drive reports ~494-500 GB
+if [ -z "$HWLOW" ]; then rec PASS AJ-HW-00 hardware "${CHIP:-?}, ${MEM_GB} GB RAM, ${DISK_GB} GB disk" "M3+ 16GB 512GB" "README: Recommended hardware"
+else rec WARN AJ-HW-01 hardware "${CHIP:-?}, ${MEM_GB} GB RAM, ${DISK_GB} GB disk (below:${HWLOW})" "M3+ 16GB 512GB" "REPAIR.md AJ-HW-01"; fi
 # 0b free disk space (home volume)
 FREE_GB=$(( $(df -k "$HOME" | awk 'NR==2{print $4}') / 1048576 ))
 if [ "$FREE_GB" -lt "$DISK_FAIL_GB" ]; then rec FAIL AJ-DISK-02 disk "${FREE_GB} GB free" ">=$DISK_WARN_GB GB (min $DISK_FAIL_GB)" "REPAIR.md AJ-DISK-02"
@@ -42,16 +50,16 @@ if [ -z "$NV" ]; then rec FAIL AJ-NODE-01 node missing ">=$NODE_MIN_MAJOR" homeb
 elif [ "${NV%%.*}" -ge "$NODE_MIN_MAJOR" ]; then rec PASS AJ-NODE-00 node "$NV" ">=$NODE_MIN_MAJOR" homebrew
 else rec FAIL AJ-NODE-02 node "$NV" ">=$NODE_MIN_MAJOR" homebrew; fi
 if command -v git >/dev/null; then rec PASS AJ-GIT-00 git "$(ver git --version)" any apple-clt; else rec FAIL AJ-GIT-01 git missing any apple-clt; fi
-# 3 local drivers: Claude Code CLI and Codex CLI. At least one must be signed in (the agent that runs this setup).
-# Codex signed in → Claude is optional (its FAILs become WARN). Claude signed in → Codex sign-in is optional (WARN).
+# 3 local drivers: Codex CLI and Claude Code CLI are both required (installed, at the minimum version).
+# Sign in to both is recommended: both signed in → PASS; only one → WARN for the other; neither → FAIL for both.
 CV="$(ver claude --version)"; XV2="$(ver codex --version)"
 CS=0; [ -n "$CV" ] && ge "$CV" "$CLAUDE_CLI_MIN" && claude auth status >/dev/null 2>&1 && CS=1
 XS=0; [ -n "$XV2" ] && ge "$XV2" "$CODEX_CLI_MIN" && codex login status >/dev/null 2>&1 && XS=1
-CF=FAIL; CNOTE=""; [ $XS = 1 ] && { CF=WARN; CNOTE=" (optional 2nd lab: Codex is signed in)"; }
-XF=FAIL; XNOTE=""; [ $CS = 1 ] && { XF=WARN; XNOTE=" (optional lab)"; }
+CF=FAIL; CNOTE=""; [ $XS = 1 ] && { CF=WARN; CNOTE=" (recommended: sign in too)"; }
+XF=FAIL; XNOTE=""; [ $CS = 1 ] && { XF=WARN; XNOTE=" (recommended: sign in too)"; }
 # 3a Claude Code CLI (minimum version; it updates itself)
-if [ -z "$CV" ]; then rec $CF AJ-CLAUDE-01 claude-cli "missing$CNOTE" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code
-elif ! ge "$CV" "$CLAUDE_CLI_MIN"; then rec $CF AJ-CLAUDE-02 claude-cli "$CV$CNOTE" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code
+if [ -z "$CV" ]; then rec FAIL AJ-CLAUDE-01 claude-cli missing ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code
+elif ! ge "$CV" "$CLAUDE_CLI_MIN"; then rec FAIL AJ-CLAUDE-02 claude-cli "$CV" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code
 elif [ $CS = 1 ]; then rec PASS AJ-CLAUDE-00 claude-cli "$CV signed-in" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code
 else rec $CF AJ-CLAUDE-03 claude-cli "$CV signed-out$CNOTE" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code; fi
 # 3a' Codex CLI (minimum version; always installed; the "Local · Codex" lab; signed in locally with the user's own ChatGPT plan)

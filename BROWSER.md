@@ -9,9 +9,9 @@ Agenti mohou pracovat ve vašem prohlížeči (otevřít stránku, vyplnit formu
 
 ### Codex: rozšíření ChatGPT (dříve „Codex“), vydavatel OpenAI
 1. **Jen oficiální rozšíření:** https://chromewebstore.google.com/detail/hehggadaopoacecdllhhajmbjkdcmajg (id `hehggadaopoacecdllhhajmbjkdcmajg`, vydavatel **OpenAI**). V obchodě se dnes jmenuje **ChatGPT**; je to totéž rozšíření, které dřív neslo název Codex.
-2. **Instalace z aplikace Codex:** v aplikaci Codex otevřete **Plugins** → přidejte plugin **Chrome** a projděte průvodce (nainstaluje rozšíření a vyžádá souhlasy Chrome). Odkaz výše slouží ke kontrole, že jde o pravé rozšíření.
-3. **Ověření:** v Chrome ukazuje rozšíření stav **Connected**. V novém vlákně v Codexu napište `@Chrome` a krátký úkol.
-4. Kvůli postupnému zpřístupnění podle regionu se může stát, že plugin nebo rozšíření ještě neuvidíte. Pak tento krok přeskočte: Codex má i vlastní vestavěný prohlížeč pro veřejné stránky.
+2. **Instalace z aplikace** (podle návodu OpenAI, https://learn.chatgpt.com/docs/chrome-extension): aktualizujte aplikaci, otevřete **Settings → Computer Use**, vyberte **Google Chrome** a potvrďte instalaci pluginu, pokud se objeví. Pak **Install** u prohlížeče → na stránce obchodu nainstalujte rozšíření **ChatGPT** (zkontrolujte id a vydavatele výše) a projděte souhlasy. Starší verze aplikace to mají v **Plugins → Chrome**.
+3. **Ověření:** v **Settings → Computer Use** ukazuje Chrome **Manage** („Connected to browser extension“). V novém vlákně napište `@Chrome` a krátký úkol, v profilu Chrome, kde je rozšíření nainstalované.
+4. Podle OpenAI dostupnost prohlížeče závisí na postupném zpřístupnění a nastavení pracovního prostoru. Když volbu nevidíte, krok přeskočte. Pro stránky, kde přihlášení nepotřebujete, a pro localhost má aplikace vestavěný prohlížeč (`@Browser`).
 
 ### Claude Code: rozšíření Claude in Chrome, vydavatel Anthropic (jen s plánem Claude)
 1. **Jen oficiální rozšíření:** https://chromewebstore.google.com/detail/fcoeoabgfenejglbffodgkkbkcdhcgfn (vydavatel **Anthropic**). Pozor na napodobeniny jako „Claude On Google“. Funguje jen s placeným plánem Claude (Pro a vyšší).
@@ -30,9 +30,9 @@ Agents can work in your browser (open a page, fill a form, check a site). You ne
 
 ### Codex: the ChatGPT extension (formerly "Codex"), publisher OpenAI
 1. **Official extension only:** https://chromewebstore.google.com/detail/hehggadaopoacecdllhhajmbjkdcmajg (id `hehggadaopoacecdllhhajmbjkdcmajg`, publisher **OpenAI**). The store now lists it as **ChatGPT**; it's the same extension that used to be called Codex.
-2. **Install it from the Codex app:** in the Codex app open **Plugins** → add the **Chrome** plugin and follow the guide (it installs the extension and asks for Chrome's permissions). Use the link above to check that it's the real extension.
-3. **Verify:** in Chrome the extension shows **Connected**. In a new Codex thread, type `@Chrome` and a short task.
-4. Because of a gradual, region-based rollout, the plugin or extension may not show up for you yet. Then skip this step: Codex also has its own built-in browser for public pages.
+2. **Install it from the app** (per OpenAI's guide, https://learn.chatgpt.com/docs/chrome-extension): update the app, open **Settings → Computer Use**, select **Google Chrome** and accept the plugin install if prompted. Then **Install** beside the browser → install the **ChatGPT** extension from its store page (check the id and publisher above) and review the permission prompts. Older app versions have this under **Plugins → Chrome**.
+3. **Verify:** in **Settings → Computer Use**, Chrome shows **Manage** ("Connected to browser extension"). In a new thread, type `@Chrome` and a short task, in the Chrome profile where the extension is installed.
+4. Per OpenAI, browser availability can depend on rollout and workspace settings. If you don't see the option, skip this step. For pages that need no sign-in, and for localhost, the app has a built-in browser (`@Browser`).
 
 ### Claude Code: the Claude in Chrome extension, publisher Anthropic (Claude plan only)
 1. **Official extension only:** https://chromewebstore.google.com/detail/fcoeoabgfenejglbffodgkkbkcdhcgfn (publisher **Anthropic**). Watch out for look-alikes such as "Claude On Google". It works only with a paid Claude plan (Pro and up).

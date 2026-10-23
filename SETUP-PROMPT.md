@@ -42,10 +42,10 @@ Spusť `bin/doctor.sh` a lidsky mi shrň, co je PASS a co FAIL.
 ## Krok 4: Instalace
 0. **Google Chrome** (povinný): když chybí v Aplikacích, pošli mě na https://www.google.com/chrome. Stáhnu ho a přetáhnu **Google Chrome** do Aplikací sám. (Nebo po mém souhlasu `brew install --cask google-chrome`.)
 1. Po souhlasu `bin/install.sh all`. Nainstaluje Codex CLI, Claude Code CLI, náš T3 Code TPLUS, Tentacles a estate-guardian (klasifikátor + router pro Tentacles) v přesných verzích. (Když chybí Python 3.11+, řiď se `REPAIR.md` AJ-PY-01.) Je bezpečné ho pustit znovu.
-2. Přihlášení dělám já, aspoň jedno z nich (podle předplatného, které mám): `codex login` (otevře se prohlížeč, přihlásím se svým ChatGPT Plus) a/nebo `claude auth login` (Claude Pro). Pak otevřu **T3 Code TPLUS** (poprvé pravým tlačítkem → **Otevřít**, aplikace zatím není notarizovaná; nebo Nastavení systému → Soukromí a zabezpečení → Přesto otevřít) a v **Settings → Providers** zkontroluju, že je **Codex** (a/nebo **Claude Code**) připravený, ne „not found“ (jinak `REPAIR.md` AJ-T3-06).
+2. Přihlášení dělám já. Doporučeně obě (každé ze svého předplatného), aspoň jedno: `codex login` (otevře se prohlížeč, přihlásím se svým ChatGPT Plus) a `claude auth login` (Claude Pro). Pak otevřu **T3 Code TPLUS** (poprvé pravým tlačítkem → **Otevřít**, aplikace zatím není notarizovaná; nebo Nastavení systému → Soukromí a zabezpečení → Přesto otevřít) a v **Settings → Providers** zkontroluju, že jsou **Codex** a **Claude Code** připravené, ne „not found“ (jinak `REPAIR.md` AJ-T3-06). Když mám zatím jen jedno předplatné, stačí ten jeden.
 3. Volitelně (zeptej se mě): `bin/install.sh guardian` (samotný hlídač estate-guardian, pro pokročilé; jen stažení, trvalé hlídání se nezapíná).
 4. Znovu `bin/doctor.sh`. Každý FAIL oprav podle `REPAIR.md` a ověř dalším doctorem.
-5. **Volitelně, druhý lab Claude Code** (zeptej se mě; potřebuji předplatné Claude Pro): nainstaluji si aplikaci Claude z https://claude.com/download a přihlásím se, v Terminálu `claude auth login`. V T3 Code TPLUS → **Settings → Providers** pak musí být připravené **oba**, Codex i Claude Code. Doctor ukáže AJ-CLAUDE-00 místo WARN.
+5. **Doporučeno, druhá aplikace:** když instalaci řídí Codex, nainstaluji si i aplikaci Claude z https://claude.com/download (předplatné Claude Pro); když ji řídí Claude Code, nainstaluji si i aplikaci Codex z https://openai.com/codex → **Download for macOS** (ChatGPT Plus). Přihlásím se v ní i v Terminálu (bod 2). Doctor pak ukáže AJ-CLAUDE-00 a AJ-CODEX-00 místo WARN.
 
 ## Krok 5: Aplikace Agent Jack
 1. V prohlížeči se přihlásím na https://agentjack.kraliki.com/app (**Google**, nebo e-mail a heslo, pokud jsem je dostal) a otevřu https://agentjack.kraliki.com/downloads
@@ -58,8 +58,8 @@ Spusť `bin/doctor.sh` a lidsky mi shrň, co je PASS a co FAIL.
 
 ## Krok 6b (volitelné): Rozšíření do Chrome
 Zeptej se mě, jestli chci, aby agenti pracovali i v mém Chrome. Pokud ano, proveď mě [BROWSER.md](BROWSER.md):
-- **Codex:** v aplikaci Codex → **Plugins** → plugin **Chrome** → průvodce nainstaluje rozšíření **ChatGPT** (vydavatel **OpenAI**, id `hehggadaopoacecdllhhajmbjkdcmajg`). Ověření: v Chrome stav **Connected**. Když plugin není k dispozici, krok přeskoč (REPAIR AJ-BROWSER-02).
-- **Claude Code** (jen když mám plán Claude): rozšíření **Claude in Chrome** (vydavatel **Anthropic**), přihlášení **stejným účtem Claude**. Ověření: aspoň jeden připojený prohlížeč.
+- **Codex:** v aplikaci Codex → **Settings → Computer Use** → **Google Chrome** → **Install** → rozšíření **ChatGPT** (vydavatel **OpenAI**, id `hehggadaopoacecdllhhajmbjkdcmajg`; starší verze aplikace: **Plugins → Chrome**). Ověření: u Chrome je **Manage**. Když volba není k dispozici, krok přeskoč (REPAIR AJ-BROWSER-02).
+- **Claude Code** (doporučeno; potřebuje plán Claude): rozšíření **Claude in Chrome** (vydavatel **Anthropic**), přihlášení **stejným účtem Claude**. Ověření: aspoň jeden připojený prohlížeč.
 Jiná rozšíření s podobným názvem neinstaluj.
 
 ## Krok 7: DOCTOR report

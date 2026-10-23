@@ -6,7 +6,7 @@
 
 | Setup tag | Date | T3 Code (fork) | Tentacles | estate-guardian (classify standard, guard optional) | Claude Code CLI / Codex CLI (driver) | Agent Jack desktop | Tested on | Co je nového / What's new |
 |---|---|---|---|---|---|---|---|---|
-| v1.0.5 | 2026-10-23 | v0.0.42-tplus.2 | v0.4.1-jack.1 | v1.0.0 (estate-classify 0.3.0) | Codex CLI ≥ 0.162.1 required; Claude Code ≥ 2.1.302 optional 2nd lab | ≥ 3.17.41 | proof pending: first assisted install (Codex path, MacBook) | Google Chrome required (doctor AJ-CHROME-*); official Chrome extensions in BROWSER.md (ChatGPT/Codex by OpenAI, Claude in Chrome by Anthropic); Claude Code as optional 2nd Local lab (step 4.5); "what you end up with" table |
+| v1.0.5 | 2026-10-23 | v0.0.42-tplus.2 | v0.4.1-jack.1 | v1.0.0 (estate-classify 0.3.0) | Codex CLI ≥ 0.162.1 + Claude Code ≥ 2.1.302, both required (sign-in to both recommended) | ≥ 3.17.41 | proof pending: first assisted install (Codex path, MacBook) | recommended minimum = ChatGPT Plus + Claude Pro, both CLIs required; Google Chrome required (AJ-CHROME-*); official Chrome extensions in BROWSER.md (ChatGPT/Codex by OpenAI, Claude in Chrome by Anthropic); recommended hardware M3+/16 GB/512 GB (AJ-HW-01 WARN); "what you end up with" and "where Agent Jack runs" in README |
 | v1.0.4 | 2026-10-23 | v0.0.42-tplus.2 | v0.4.1-jack.1 | v1.0.0 (estate-classify 0.3.0) | ≥ 2.1.302 + Codex CLI ≥ 0.162.1 (one of them signed in) | ≥ 3.17.41 | superseded by v1.0.5 before its first install (no separate proof) | Codex path: ChatGPT Plus + Codex app as the driver (README, SETUP-PROMPT, AGENTS); doctor: Claude optional when Codex is signed in, Codex reply check AJ-CODEX-04/05; optional step 8 T3 Code mobile app (pairing with TPLUS unproven) |
 | v1.0.3 | 2026-10-19 | v0.0.42-tplus.2 (dmg sha256 re-verified by download 2026-10-19) | v0.4.1-jack.1 | v1.0.0 (estate-classify 0.3.0) | ≥ 2.1.302 (+ Codex CLI ≥ 0.162.1) | ≥ 3.17.41 | proof pending: first assisted install on an early person's own computer (see "Assisted first install" below) | REPAIR AJ-T3-06: provider "not found" in T3 (login-shell PATH / binary path fallback); Windows still not proven |
 | v1.0.2 | 2026-10-17 | v0.0.42-tplus.2 | v0.4.1-jack.1 | v1.0.0 (estate-classify 0.3.0) | ≥ 2.1.302 (+ Codex CLI ≥ 0.162.1) | ≥ 3.17.41 | edge-device install (macOS 26.4, arm64), sign-ins pending | Codex CLI is now a standard component (the "Local · Codex" lab): install, doctor AJ-CODEX-*, REPAIR |
@@ -19,13 +19,13 @@ Since v1.0.3 the release proof is an early person's **own computer**, with the F
 
 **Have ready before the sitting**
 - The person's Mac (macOS ≥ 13) with Google Chrome (or it gets installed in step 4) and an admin account, ≥ 20 GB free, the power cable connected, and a working Time Machine or other backup (step 0).
-- Their own plan for the driver: **ChatGPT Plus** for Codex (path A) or **Claude Pro/Max** for Claude Code (path B). One is enough.
+- Their own plans: **ChatGPT Plus** (Codex) and **Claude Pro** (Claude Code), both recommended; one is enough to pass (the other shows WARN). Ideally an Apple M3+ Mac with 16 GB RAM and 512 GB disk (else AJ-HW-01 WARN).
 - Their Agent Jack account (Google or the email and password from the welcome mail), plus their phone for 2FA.
-- Path A: the Codex app from https://openai.com/codex (**Download for macOS**), signed in, folder `~/Developer` open, permissions **Ask for approval**. Path B: the Claude app from https://claude.com/download, signed in, **Code** tab, model **Sonnet**, effort **high**. Then paste the whole SETUP-PROMPT.md text in.
+- The Codex app from https://openai.com/codex (**Download for macOS**) and the Claude app from https://claude.com/download, both signed in. The driver app gets the whole SETUP-PROMPT.md text: Codex with folder `~/Developer` open and permissions **Ask for approval**, or Claude in the **Code** tab, model **Sonnet**, effort **high**.
 
 **The person does these themselves (their passwords, their 2FA, their clicks)**
 1. Their Mac admin password (Homebrew) and "Open Anyway" in System Settings → Privacy & Security.
-2. `codex login` (path A) and/or `claude auth login` (path B) in their browser; in the Codex app, approving each command the agent asks for.
+2. `codex login` and `claude auth login` in their browser (both recommended); in the Codex app, approving each command the agent asks for.
 3. Opening T3 Code TPLUS once and checking Settings → Providers → Codex or Claude Code is ready (step 4).
 4. Downloading Agent Jack from https://agentjack.kraliki.com/downloads, dragging it to Applications and signing in on the web and in the app (step 5).
 5. Approving the pairing (Settings → Computers & labs → Pair this Mac), then Bot → Provider → Local → Codex or Claude Code → one message (step 6).
@@ -34,7 +34,7 @@ Since v1.0.3 the release proof is an early person's **own computer**, with the F
 **The agent (Codex or Claude Code) does the rest**: the backup and disk check, `bin/doctor.sh`, `bin/install.sh all`, the dmg shasum check, guiding each of the person's steps, and the final `bin/doctor.sh` with the two manual lines (step 7), plus the mobile line if step 8 was tried.
 
 **What counts as the proof ("all PASS")**
-- The final `bin/doctor.sh` has **no FAIL**. AJ-PAIR-00, AJ-LOCAL-00 and AJ-BROWSER-00 always print SKIP (they are checked by hand). AJ-BAK-01 (backup other than a recent Time Machine) may be WARN, and so may the driver that isn't used: AJ-CLAUDE-* when Codex is signed in, AJ-CODEX-03/04 when Claude is signed in.
+- The final `bin/doctor.sh` has **no FAIL**. AJ-PAIR-00, AJ-LOCAL-00 and AJ-BROWSER-00 always print SKIP (they are checked by hand). AJ-BAK-01 (backup other than a recent Time Machine) and AJ-HW-01 (hardware below M3/16 GB/512 GB) may be WARN, and so may the second plan if it isn't bought yet: AJ-CLAUDE-03/04 or AJ-CODEX-03/04.
 - The two manual lines say pairing = **Paired · ready** and Local Bot replied = **yes**.
 
 **Saving the proof**
