@@ -72,7 +72,7 @@ if [ -n "$STRAY" ]; then rec $CF AJ-ENV-01 claude-env "${STRAY# }" "no ANTHROPIC
 else rec PASS AJ-ENV-00 claude-env clean "no ANTHROPIC_* override" shell; fi
 # 3b' doctor started inside the Codex app sandbox (no network): the reply checks can't work there
 SANDBOXED=0
-if [ -n "${CODEX_SANDBOX_NETWORK_DISABLED:-}" ]; then SANDBOXED=1
+if [ -n "${CODEX_SANDBOX:-}" ] && [ -n "${CODEX_SANDBOX_NETWORK_DISABLED:-}" ]; then SANDBOXED=1
   rec FAIL AJ-DOC-01 doctor "inside Codex sandbox (no network)" "run with approval, outside the sandbox" "REPAIR.md AJ-DOC-01"; fi
 # 3c Claude answers headless (60 s limit; one tiny request)
 if [ $CS = 1 ] && [ -z "$STRAY" ] && [ $SANDBOXED = 0 ]; then
