@@ -17,7 +17,7 @@ bin/doctor.sh            # read-only; PASS/FAIL per component with a stable code
 → for each FAIL: REPAIR.md <code>  (or bin/install.sh <component>)
 → bin/doctor.sh          # repeat until no FAIL, or stop and report
 ```
-- **Driver:** you are Codex or Claude Code. At least one of `codex login` / `claude auth login` must be signed in (the user does it). Doctor treats the signed-in one as required: with Codex signed in, AJ-CLAUDE-* is WARN; with Claude signed in, AJ-CODEX-03 is WARN; with neither, both are FAIL. In the Codex app, work in `~/Developer`, let the user approve each network or out-of-folder command, and never switch to **Full access**.
+- **Driver:** you are Codex or Claude Code. At least one of `codex login` / `claude auth login` must be signed in (the user does it). Doctor treats the signed-in one as required: with Codex signed in, AJ-CLAUDE-* is WARN; with Claude signed in, AJ-CODEX-03 is WARN; with neither, both are FAIL. In the Codex app, work in `~/Developer`, let the user approve each network or out-of-folder command (including every `bin/doctor.sh` run: inside the sandbox it reports AJ-DOC-01), and never switch to **Full access**.
 - Fresh install: `bin/install.sh all` (Codex CLI, Claude CLI, T3 Code TPLUS, Tentacles, estate-classify; optionally `bin/install.sh guardian` for the guard checkout), then the manual app steps in `SETUP-PROMPT.md` steps 5–6 (Local → Codex or Claude Code) and the optional mobile step 8 (pairing with T3 Code TPLUS is unproven).
 - Roll back: `bin/rollback.sh <setup-tag>` (tags in `VERSIONS.md`).
 - Remove: `bin/uninstall.sh` (lists first; deletes only with `--yes`).

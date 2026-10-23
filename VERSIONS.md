@@ -30,7 +30,7 @@ Since v1.0.3 the release proof is an early person's **own computer**, with the F
 5. Approving the pairing (Settings → Computers & labs → Pair this Mac), then Bot → Provider → Local → Codex or Claude Code → one message (step 6).
 6. Optional: installing the T3 Code mobile app (step 8; pairing with TPLUS is unproven).
 
-**Claude does the rest**: the backup and disk check, `bin/doctor.sh`, `bin/install.sh all`, the dmg shasum check, guiding each of the person's steps, and the final `bin/doctor.sh` with the two manual lines (step 7).
+**The agent (Codex or Claude Code) does the rest**: the backup and disk check, `bin/doctor.sh`, `bin/install.sh all`, the dmg shasum check, guiding each of the person's steps, and the final `bin/doctor.sh` with the two manual lines (step 7), plus the mobile line if step 8 was tried.
 
 **What counts as the proof ("all PASS")**
 - The final `bin/doctor.sh` has **no FAIL**. AJ-PAIR-00, AJ-LOCAL-00 and AJ-BROWSER-00 always print SKIP (they are checked by hand). AJ-BAK-01 (backup other than a recent Time Machine) may be WARN, and so may the driver that isn't used: AJ-CLAUDE-* when Codex is signed in, AJ-CODEX-03/04 when Claude is signed in.

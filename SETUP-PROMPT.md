@@ -14,7 +14,7 @@ Mluv se mnou **česky** (nebo jazykem, kterým ti píšu), jednoduše a krok za 
 - **Bez potvrzené zálohy (krok 0) nic neinstaluj.**
 - **Před každou instalací, stažením nebo smazáním se zeptej** a pokračuj až po mém „ano“. Kontroly spouštěj sám.
 - Žádné `sudo npm`. Nevypínej Gatekeeper, SIP ani firewall.
-- **Když běžíš v aplikaci Codex:** pracuj ve složce `~/Developer`. Příkazy, které potřebují internet nebo zápis mimo tuto složku (brew, npm, git clone, instalace aplikací), ti aplikace nechá schválit: řekni mi předem, co a proč spouštíš, a schválení nech na mně. Oprávnění nepřepínej na **Full access**.
+- **Když běžíš v aplikaci Codex:** pracuj ve složce `~/Developer`. Příkazy, které potřebují internet nebo zápis mimo tuto složku (brew, npm, git clone, `bin/install.sh`, instalace aplikací a také **každý `bin/doctor.sh`**, protože jeho testy odpovědi potřebují internet), spouštěj mimo sandbox se schválením: řekni mi předem, co a proč spouštíš, a schválení nech na mně. Oprávnění nepřepínej na **Full access**.
 
 ## Krok 0: Záloha a místo na disku (vždy první)
 **Než na mém počítači cokoli nainstaluješ nebo změníš, musím mít zálohu dat.**

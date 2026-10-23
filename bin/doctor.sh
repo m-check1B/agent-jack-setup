@@ -70,13 +70,17 @@ for v in ANTHROPIC_BASE_URL ANTHROPIC_AUTH_TOKEN ANTHROPIC_API_KEY; do
 done
 if [ -n "$STRAY" ]; then rec $CF AJ-ENV-01 claude-env "${STRAY# }" "no ANTHROPIC_* override" "REPAIR.md AJ-ENV-01"
 else rec PASS AJ-ENV-00 claude-env clean "no ANTHROPIC_* override" shell; fi
+# 3b' doctor started inside the Codex app sandbox (no network): the reply checks can't work there
+SANDBOXED=0
+if [ -n "${CODEX_SANDBOX_NETWORK_DISABLED:-}" ]; then SANDBOXED=1
+  rec FAIL AJ-DOC-01 doctor "inside Codex sandbox (no network)" "run with approval, outside the sandbox" "REPAIR.md AJ-DOC-01"; fi
 # 3c Claude answers headless (60 s limit; one tiny request)
-if [ $CS = 1 ] && [ -z "$STRAY" ]; then
+if [ $CS = 1 ] && [ -z "$STRAY" ] && [ $SANDBOXED = 0 ]; then
   if [ "$(perl -e 'alarm 60; exec @ARGV' claude -p "Reply with exactly: OK" </dev/null 2>/dev/null | tr -d '[:space:]')" = OK ]; then rec PASS AJ-CLAUDE-05 claude-reply OK OK claude
   else rec $CF AJ-CLAUDE-04 claude-reply "no-OK-in-60s" OK "REPAIR.md AJ-CLAUDE-04"; fi
 fi
 # 3d Codex answers headless (90 s limit; one tiny request, read-only sandbox, run from an empty temp folder)
-if [ $XS = 1 ]; then
+if [ $XS = 1 ] && [ $SANDBOXED = 0 ]; then
   XT="$(mktemp -d)"
   if [ "$(cd "$XT" && perl -e 'alarm 90; exec @ARGV' codex exec --skip-git-repo-check --sandbox read-only "Reply with exactly: OK" </dev/null 2>/dev/null | tail -1 | tr -d '[:space:]')" = OK ]; then rec PASS AJ-CODEX-05 codex-reply OK OK codex
   else rec $XF AJ-CODEX-04 codex-reply "no-OK-in-90s" OK "REPAIR.md AJ-CODEX-04"; fi
