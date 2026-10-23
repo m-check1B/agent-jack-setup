@@ -44,7 +44,7 @@ Agent Jack může pouštět Boty i přímo na vašem počítači, přes vaše vl
 | Agent | **Codex CLI** + aplikace Codex, **Claude Code CLI** + aplikace Claude; v T3 oba laby Local | — |
 | Pracovní prostředí | **T3 Code TPLUS**, **Tentacles**, estate-guardian (klasifikátor) | samotný hlídač estate-guardian (pro pokročilé) |
 | Agent Jack | **aplikace Agent Jack** spárovaná s počítačem | aplikace **T3 Code** na mobil / iPad (párování s TPLUS zatím neověřené) |
-| Prohlížeč | **Google Chrome** + doporučená rozšíření **Claude in Chrome** (Anthropic) a **ChatGPT** (OpenAI, pro Codex, pokud je ve vašem regionu); viz [BROWSER.md](BROWSER.md) | — |
+| Prohlížeč | **Google Chrome** + doporučená rozšíření **Claude in Chrome** (Anthropic) a **ChatGPT** (OpenAI, pro Codex, pokud ho máte k dispozici: postupné zpřístupnění, nastavení pracovního prostoru); viz [BROWSER.md](BROWSER.md) | — |
 
 **Náklady:** doporučené minimum jsou **obě předplatná, ≈ 2 × 20 USD měsíčně**:
 
@@ -126,7 +126,7 @@ Agent Jack can also run Bots on your own computer, on your own AI subscription.
 | Agent | **Codex CLI** + the Codex app, **Claude Code CLI** + the Claude app; both Local labs in T3 | — |
 | Workspace | **T3 Code TPLUS**, **Tentacles**, estate-guardian (classifier) | the estate-guardian watchdog itself (advanced) |
 | Agent Jack | the **Agent Jack app**, paired with your computer | the **T3 Code** app on your phone / iPad (pairing with TPLUS not proven yet) |
-| Browser | **Google Chrome** + the recommended **Claude in Chrome** (Anthropic) and **ChatGPT** (OpenAI, for Codex, where offered in your region) extensions; see [BROWSER.md](BROWSER.md) | — |
+| Browser | **Google Chrome** + the recommended **Claude in Chrome** (Anthropic) and **ChatGPT** (OpenAI, for Codex, where available: rollout and workspace settings) extensions; see [BROWSER.md](BROWSER.md) | — |
 
 **Cost:** the recommended minimum is **both plans, ≈ 2 × USD 20/month**:
 

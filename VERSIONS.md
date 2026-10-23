@@ -26,7 +26,7 @@ Since v1.0.3 the release proof is an early person's **own computer**, with the F
 **The person does these themselves (their passwords, their 2FA, their clicks)**
 1. Their Mac admin password (Homebrew) and "Open Anyway" in System Settings → Privacy & Security.
 2. `codex login` and `claude auth login` in their browser (both recommended); in the Codex app, approving each command the agent asks for.
-3. Opening T3 Code TPLUS once and checking Settings → Providers → Codex or Claude Code is ready (step 4).
+3. Opening T3 Code TPLUS once and checking Settings → Providers → Codex and Claude Code are ready, or the one plan they have (step 4).
 4. Downloading Agent Jack from https://agentjack.kraliki.com/downloads, dragging it to Applications and signing in on the web and in the app (step 5).
 5. Approving the pairing (Settings → Computers & labs → Pair this Mac), then Bot → Provider → Local → Codex or Claude Code → one message (step 6).
 6. Optional: installing the T3 Code mobile app (step 8; pairing with TPLUS is unproven).
