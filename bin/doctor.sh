@@ -47,7 +47,7 @@ if command -v git >/dev/null; then rec PASS AJ-GIT-00 git "$(ver git --version)"
 CV="$(ver claude --version)"; XV2="$(ver codex --version)"
 CS=0; [ -n "$CV" ] && ge "$CV" "$CLAUDE_CLI_MIN" && claude auth status >/dev/null 2>&1 && CS=1
 XS=0; [ -n "$XV2" ] && ge "$XV2" "$CODEX_CLI_MIN" && codex login status >/dev/null 2>&1 && XS=1
-CF=FAIL; CNOTE=""; [ $XS = 1 ] && { CF=WARN; CNOTE=" (optional: Codex is signed in)"; }
+CF=FAIL; CNOTE=""; [ $XS = 1 ] && { CF=WARN; CNOTE=" (optional 2nd lab: Codex is signed in)"; }
 XF=FAIL; XNOTE=""; [ $CS = 1 ] && { XF=WARN; XNOTE=" (optional lab)"; }
 # 3a Claude Code CLI (minimum version; it updates itself)
 if [ -z "$CV" ]; then rec $CF AJ-CLAUDE-01 claude-cli "missing$CNOTE" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code
@@ -138,10 +138,14 @@ else JV="$(plist_ver "$AJ")"
   if ge "$JV" "$JACK_DESKTOP_MIN"; then rec PASS AJ-JACK-00 agent-jack-app "$JV" ">=$JACK_DESKTOP_MIN" "agentjack.kraliki.com/downloads (signed in)"
   else rec FAIL AJ-JACK-02 agent-jack-app "$JV" ">=$JACK_DESKTOP_MIN" "agentjack.kraliki.com/downloads (signed in)"; fi
 fi
+# 7b Google Chrome (required: the browser the agents' extensions run in; it updates itself, so no pin)
+GC="$(app_path 'Google Chrome')"
+if [ -z "$GC" ]; then rec FAIL AJ-CHROME-01 google-chrome missing any "google.com/chrome (REPAIR.md AJ-CHROME-01)"
+else rec PASS AJ-CHROME-00 google-chrome "$(plist_ver "$GC")" any google.com/chrome; fi
 # 8 manual checks (inside the Agent Jack app; doctor cannot see them)
 rec SKIP AJ-PAIR-00 pairing manual "Paired · ready" "Settings → Computers & labs"
 rec SKIP AJ-LOCAL-00 local-bot manual "Local reply OK" "Bot → Provider → Local → Codex or Claude Code"
-rec SKIP AJ-BROWSER-00 browser "manual (optional)" ">=1 connected browser" "BROWSER.md: ask your agent to list connected browsers"
+rec SKIP AJ-BROWSER-00 browser "manual (optional)" "extension Connected" "BROWSER.md: Codex → ChatGPT extension (OpenAI); Claude → Claude in Chrome (Anthropic)"
 
 if [ $JSON = 1 ]; then
   printf '{"doctor":"agent-jack-setup","setup_tag":"%s","fails":%d,"checks":[' "$SETUP_TAG" "$FAILS"

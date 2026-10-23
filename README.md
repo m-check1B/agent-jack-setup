@@ -27,6 +27,15 @@ Agent Jack může pouštět Boty i přímo na vašem počítači, přes vaše vl
 
 **Co získáte:** Codex nebo Claude Code (aplikace i příkazový řádek; jeden z nich řídí instalaci a pak běží jako lab „Local“), [T3 Code TPLUS](https://github.com/m-check1B/t3code-tplus) (naše otestovaná verze T3 Code: víc AI agentů vedle sebe), [Tentacles](https://github.com/m-check1B/t3-code-tentacles) (jeden agent řídí další), [estate-guardian (klasifikátor + router pro Tentacles)](https://github.com/m-check1B/estate-guardian) (rozhoduje, kterému agentovi práce patří; samotný hlídač je volitelný pro pokročilé) a aplikaci Agent Jack spárovanou s počítačem.
 
+**Co budete mít:**
+
+| | Povinné | Volitelné |
+|---|---|---|
+| Agent | **Codex CLI** (vždy) + aplikace Codex | **Claude Code CLI** + aplikace Claude (předplatné Claude Pro) jako druhý lab „Local · Claude Code“ |
+| Pracovní prostředí | **T3 Code TPLUS**, **Tentacles**, estate-guardian (klasifikátor) | samotný hlídač estate-guardian (pro pokročilé) |
+| Agent Jack | **aplikace Agent Jack** spárovaná s počítačem | aplikace **T3 Code** na mobil / iPad (párování s TPLUS zatím neověřené) |
+| Prohlížeč | **Google Chrome** | rozšíření **ChatGPT** od OpenAI (pro Codex), **Claude in Chrome** od Anthropic (pro Claude); viz [BROWSER.md](BROWSER.md) |
+
 **Vyberte si jednoho agenta, který instalaci provede.** Stačí jedno předplatné:
 
 | | **A: Codex (ChatGPT Plus)** · nová cesta od v1.0.4 | **B: Claude Code (Claude Pro)** · ověřená cesta |
@@ -50,7 +59,7 @@ Obě předplatná mají limity použití. Když limit vyčerpáte, aplikace nap�
 
 **Oprava:** když něco přestane fungovat, otevřete Codex nebo Claude Code a napište: „oprav mi nastavení Agent Jacka podle github.com/m-check1B/agent-jack-setup“. Agent spustí `bin/doctor.sh` a opraví chyby podle [REPAIR.md](REPAIR.md).
 
-**Prohlížeč pro agenty (volitelné):** rozšíření Claude in Chrome, viz [BROWSER.md](BROWSER.md). **Codex CLI i Claude Code CLI** instaluje `install.sh` vždy. Přihlásit musíte aspoň jeden z nich (`codex login` nebo `claude auth login`); každý zapne svůj lab („Local · Codex“, „Local · Claude Code“).
+**Prohlížeč pro agenty:** Google Chrome je povinný; rozšíření ChatGPT (OpenAI, pro Codex) a Claude in Chrome (Anthropic) jsou volitelná, viz [BROWSER.md](BROWSER.md). **Codex CLI i Claude Code CLI** instaluje `install.sh` vždy. Přihlásit musíte aspoň jeden z nich (`codex login` nebo `claude auth login`); každý zapne svůj lab („Local · Codex“, „Local · Claude Code“).
 
 ### Doporučené nástroje (volitelné)
 Jen doporučení: `install.sh` je neinstaluje a DOCTOR je nekontroluje. Všechno z oficiálních zdrojů, s vlastním účtem.
@@ -90,6 +99,15 @@ Agent Jack can also run Bots on your own computer, on your own AI subscription.
 
 **What you get:** Codex or Claude Code (app and CLI; one of them runs the install and then works as the "Local" lab), [T3 Code TPLUS](https://github.com/m-check1B/t3code-tplus) (our tested build of T3 Code: several AI agents side by side), [Tentacles](https://github.com/m-check1B/t3-code-tentacles) (one agent steers others), [estate-guardian (classifier + router for Tentacles)](https://github.com/m-check1B/estate-guardian) (decides which agent a job goes to; the watchdog itself is optional, for advanced users), and the Agent Jack app paired with your computer.
 
+**What you end up with:**
+
+| | Required | Optional |
+|---|---|---|
+| Agent | **Codex CLI** (always) + the Codex app | **Claude Code CLI** + the Claude app (Claude Pro plan) as a second "Local · Claude Code" lab |
+| Workspace | **T3 Code TPLUS**, **Tentacles**, estate-guardian (classifier) | the estate-guardian watchdog itself (advanced) |
+| Agent Jack | the **Agent Jack app**, paired with your computer | the **T3 Code** app on your phone / iPad (pairing with TPLUS not proven yet) |
+| Browser | **Google Chrome** | the **ChatGPT** extension by OpenAI (for Codex), **Claude in Chrome** by Anthropic (for Claude); see [BROWSER.md](BROWSER.md) |
+
 **Pick one agent to run the install.** One plan is enough:
 
 | | **A: Codex (ChatGPT Plus)** · new path since v1.0.4 | **B: Claude Code (Claude Pro)** · proven path |
@@ -116,7 +134,7 @@ Both plans have usage limits. When you reach one, the app tells you when it rese
 
 **For agents:** start at [AGENTS.md](AGENTS.md).
 
-**Browser for agents (optional):** the Claude in Chrome extension, see [BROWSER.md](BROWSER.md). `install.sh` always installs **both Codex CLI and Claude Code CLI**. Sign in to at least one (`codex login` or `claude auth login`); each one enables its lab ("Local · Codex", "Local · Claude Code").
+**Browser for agents:** Google Chrome is required; the ChatGPT extension (OpenAI, for Codex) and Claude in Chrome (Anthropic) are optional, see [BROWSER.md](BROWSER.md). `install.sh` always installs **both Codex CLI and Claude Code CLI**. Sign in to at least one (`codex login` or `claude auth login`); each one enables its lab ("Local · Codex", "Local · Claude Code").
 
 ### Recommended tools (optional)
 Recommendations only: `install.sh` doesn't install them and DOCTOR doesn't check them. All from official sources, with your own account.
