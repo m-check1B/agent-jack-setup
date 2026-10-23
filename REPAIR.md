@@ -13,15 +13,18 @@ Run `bin/doctor.sh`, find the code, apply the fix (ask the user before any chang
 | AJ-NODE-01 / AJ-NODE-02 | Node.js missing or too old | `brew install node` (or `brew upgrade node`) | `node -v` ≥ 22 |
 | AJ-GIT-01 | git missing | `xcode-select --install` (the user confirms the dialog) | `git --version` |
 | AJ-NPM-01 | `EACCES` on npm install -g | Never sudo. `mkdir -p ~/.npm-global && npm config set prefix ~/.npm-global`, add `export PATH="$HOME/.npm-global/bin:$PATH"` to `~/.zshrc`, open a new terminal, re-run the install | re-run the failed install |
+| AJ-CLAUDE-01 / -02 / -03 / -04 (WARN) | Shown as WARN when Codex is signed in: Claude Code is then optional, Codex is the local driver | Nothing to fix. If the user also wants the "Local · Claude Code" lab, apply the FAIL row for that code below | doctor shows AJ-CODEX-00 + AJ-CODEX-05 |
 | AJ-CLAUDE-01 | Claude Code CLI missing | `bin/install.sh claude` | doctor AJ-CLAUDE-00 |
 | AJ-CLAUDE-02 | Claude Code CLI older than the minimum | `bin/install.sh claude` (or `claude update`) | doctor |
-| AJ-CLAUDE-03 | CLI signed out | The user runs `claude auth login` and signs in with their Claude Pro account | `claude auth status` |
-| AJ-ENV-01 | A shell file or the environment sets ANTHROPIC_BASE_URL / ANTHROPIC_AUTH_TOKEN / ANTHROPIC_API_KEY. It silently overrides your Claude sign-in (e.g. another provider), and `claude -p` can hang | Show the user the file and line name (never the value). With their OK, comment out that line, open a new terminal and re-run doctor. Never copy or print the value | doctor AJ-ENV-00 |
+| AJ-CLAUDE-03 | Claude CLI signed out, and Codex is not signed in either (no local driver) | The user signs in to the plan they have: `codex login` (ChatGPT Plus, the Codex path) or `claude auth login` (Claude Pro). One is enough | doctor AJ-CODEX-00 or AJ-CLAUDE-00 |
+| AJ-ENV-01 (WARN when Codex is signed in) | A shell file or the environment sets ANTHROPIC_BASE_URL / ANTHROPIC_AUTH_TOKEN / ANTHROPIC_API_KEY. It silently overrides your Claude sign-in (e.g. another provider), and `claude -p` can hang | Show the user the file and line name (never the value). With their OK, comment out that line, open a new terminal and re-run doctor. Never copy or print the value | doctor AJ-ENV-00 |
 | AJ-CLAUDE-04 | `claude -p "Reply with exactly: OK"` gave no OK within 60 s (only tested once signed in) | Fix AJ-CLAUDE-03 and AJ-ENV-01 first. Then the user runs `claude auth logout && claude auth login` (over ssh: open the link, paste the code into the same terminal) and re-runs doctor | doctor AJ-CLAUDE-05 |
 | AJ-BROWSER-01 (manual) | Claude Code reports "no connected browser" | BROWSER.md: install the official Claude in Chrome extension (publisher Anthropic) in the right Chrome profile, pin it via 🧩, and sign in with the SAME Claude account as Claude Code. After an account switch, reinstall it | Claude Code lists ≥1 connected browser |
 | AJ-CODEX-01 | Codex CLI missing | `bin/install.sh codex` | doctor AJ-CODEX-00 |
 | AJ-CODEX-02 | Codex CLI older than the minimum | `bin/install.sh codex` | doctor AJ-CODEX-00 |
-| AJ-CODEX-03 (WARN) | Codex CLI signed out (the "Local · Codex" lab is optional; it needs a ChatGPT plan) | The user runs `codex login` and signs in with their OWN ChatGPT plan on this machine | `codex login status` |
+| AJ-CODEX-03 | Codex CLI signed out. FAIL when Claude isn't signed in either (no local driver); WARN when Claude is signed in (the "Local · Codex" lab is then optional) | The user runs `codex login` and signs in with their OWN ChatGPT plan (Plus is enough) on this machine. Over ssh: `codex login --device-auth` if offered, else sign in on the Mac itself | `codex login status` |
+| AJ-CODEX-04 | `codex exec "Reply with exactly: OK"` gave no OK within 90 s (only tested once signed in). WARN when Claude is the signed-in driver | Check the plan's usage limit in the Codex app (it shows when it resets; then wait). Otherwise the user runs `codex logout && codex login` and re-runs doctor. If it still fails, stop and report | doctor AJ-CODEX-05 |
+| AJ-CODEX-06 (manual) | In the Codex app the agent can't run brew/npm/git clone ("sandbox", "network disabled", "permission denied" outside the folder) | Keep the folder `~/Developer` open in the app and permissions on **Ask for approval**; the agent asks, the user approves each command. Never switch to **Full access** for this setup | the command runs after approval |
 | AJ-T3-01 | T3 Code missing | `bin/install.sh t3` | doctor AJ-T3-00 |
 | AJ-T3-02 | T3 Code version ≠ pin (often after an upstream update) | `bin/install.sh t3` (quits T3, reinstalls the pinned fork) | doctor |
 | AJ-T3-05 (manual) | macOS says T3 Code TPLUS "can't be opened" / unidentified developer | The build isn't notarized yet. The user right-clicks the app → **Open**, or System Settings → Privacy & Security → **Open Anyway**. Never disable Gatekeeper | the app opens |
@@ -30,7 +33,7 @@ Run `bin/doctor.sh`, find the code, apply the fix (ask the user before any chang
 | AJ-T3-04 | Downloaded T3 doesn't match the checksum | Don't install. Delete the download and retry once. If it fails again, stop and report | — |
 | AJ-TENT-01 | Tentacles missing | `bin/install.sh tentacles` | `tentacles --version` |
 | AJ-TENT-02 | Tentacles version ≠ pin | `bin/install.sh tentacles` | doctor |
-| AJ-TENT-03 | `tentacles doctor` not ready (often "T3 token file … missing" until T3 Code TPLUS has been opened once) | Make sure T3 Code TPLUS is running and Claude Code is signed in to it (T3 → Settings → Providers), then re-run doctor. If it's still not ready, stop and report | doctor AJ-TENT-00 |
+| AJ-TENT-03 | `tentacles doctor` not ready (often "T3 token file … missing" until T3 Code TPLUS has been opened once) | Make sure T3 Code TPLUS is running and Codex or Claude Code shows ready in it (T3 → Settings → Providers), then re-run doctor. If it's still not ready, stop and report | doctor AJ-TENT-00 |
 | AJ-PY-01 | Python older than 3.11 (macOS ships 3.9) | `brew install python@3.12`, then `bin/install.sh classify` | `python3.12 --version` |
 | AJ-EC-01 | estate-classify (classifier + router for Tentacles) not installed | `bin/install.sh classify` (venv in `~/.agent-jack/venv`) | doctor AJ-EC-00 |
 | AJ-EC-02 | estate-classify version ≠ pin | `bin/install.sh classify` | doctor |
@@ -38,8 +41,9 @@ Run `bin/doctor.sh`, find the code, apply the fix (ask the user before any chang
 | AJ-EG-02 | Optional guard checkout off-pin | `bin/install.sh guardian`, or remove it with `rm -rf ~/Developer/estate-guardian` (it's optional) | doctor |
 | AJ-JACK-02 | Agent Jack app older than the minimum | The app updates itself; or download it again from https://agentjack.kraliki.com/downloads while signed in | doctor AJ-JACK-00 |
 | AJ-JACK-01 | Agent Jack app missing | The user signs in at https://agentjack.kraliki.com/app, downloads from /downloads and drags it to Applications (SETUP-PROMPT step 5) | doctor AJ-JACK-00 |
+| AJ-MOBILE-00 (manual, optional) | The T3 Code mobile app (iOS/Android) won't pair with T3 Code TPLUS, or TPLUS shows no pairing code | Unproven in this release: skip step 8 and write "mobile: unproven" under the DOCTOR report. Don't install Tailscale/VPN or open ports for it | — |
 | AJ-PAIR-00 (manual) | Not paired | In the app: Settings → Computers & labs → Pair / **Repair now** | "Paired · ready" |
-| AJ-LOCAL-00 (manual) | Local Bot doesn't answer ("The turn failed", "Pairer offer is expired") | **Repair now**, then on the Bot pick Provider → Local → Claude Code → **Start new session**. If it still fails, switch the Bot to Server and report | Bot replies |
+| AJ-LOCAL-00 (manual) | Local Bot doesn't answer ("The turn failed", "Pairer offer is expired") | **Repair now**, then on the Bot pick Provider → Local → Codex (or Claude Code, whichever is signed in) → **Start new session**. If it still fails, switch the Bot to Server and report | Bot replies |
 
 ## Real cases
 (none yet: the first pilot starts in October 2026)

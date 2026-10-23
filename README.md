@@ -25,24 +25,32 @@ Měřeno na reálné instalaci (Mac, říjen 2026): Claude Code CLI ≈ 0,4 GB, 
 ### 2. Lokální nastavení (doporučeno)
 Agent Jack může pouštět Boty i přímo na vašem počítači, přes vaše vlastní předplatné AI.
 
-**Co získáte:** Claude Code (aplikace i příkazový řádek), [T3 Code TPLUS](https://github.com/m-check1B/t3code-tplus) (naše otestovaná verze T3 Code: víc AI agentů vedle sebe), [Tentacles](https://github.com/m-check1B/t3-code-tentacles) (jeden agent řídí další), [estate-guardian (klasifikátor + router pro Tentacles)](https://github.com/m-check1B/estate-guardian) (rozhoduje, kterému agentovi práce patří; samotný hlídač je volitelný pro pokročilé) a aplikaci Agent Jack spárovanou s počítačem.
+**Co získáte:** Codex nebo Claude Code (aplikace i příkazový řádek; jeden z nich řídí instalaci a pak běží jako lab „Local“), [T3 Code TPLUS](https://github.com/m-check1B/t3code-tplus) (naše otestovaná verze T3 Code: víc AI agentů vedle sebe), [Tentacles](https://github.com/m-check1B/t3-code-tentacles) (jeden agent řídí další), [estate-guardian (klasifikátor + router pro Tentacles)](https://github.com/m-check1B/estate-guardian) (rozhoduje, kterému agentovi práce patří; samotný hlídač je volitelný pro pokročilé) a aplikaci Agent Jack spárovanou s počítačem.
 
-**Náklady:** jedno předplatné **Claude Pro (20 USD měsíčně)**, https://claude.com/pricing. Pro má limity použití. Když limit vyčerpáte, Claude napíše, kdy se obnoví (obvykle za několik hodin), a do té doby počkáte. Nic se automaticky nedoplácí, pokud si placené navýšení sami nezapnete. Bot na našem serveru běží dál.
+**Vyberte si jednoho agenta, který instalaci provede.** Stačí jedno předplatné:
+
+| | **A: Codex (ChatGPT Plus)** · nová cesta od v1.0.4 | **B: Claude Code (Claude Pro)** · ověřená cesta |
+|---|---|---|
+| Předplatné | **ChatGPT Plus**, na https://openai.com/codex uvedeno za 499 Kč měsíčně (≈ 20 USD) | **Claude Pro**, 20 USD měsíčně, https://claude.com/pricing |
+| Aplikace | **Codex** pro macOS: https://openai.com/codex → **Download for macOS** | **Claude**: https://claude.com/download |
+| Kam vložit návod | do aplikace Codex: otevřete složku `~/Developer` (vytvořte ji) a oprávnění nechte na **Ask for approval** | záložka **Code**, model **Sonnet**, úroveň přemýšlení **high** |
+
+Obě předplatná mají limity použití. Když limit vyčerpáte, aplikace napíše, kdy se obnoví (obvykle za několik hodin), a do té doby počkáte. Nic se automaticky nedoplácí, pokud si placené navýšení sami nezapnete. Bot na našem serveru běží dál. Dražší model ani vyšší úroveň přemýšlení nejsou potřeba.
 
 **Postup:**
-1. Kupte Claude Pro a nainstalujte aplikaci Claude z https://claude.com/download. Přihlaste se.
-2. V aplikaci otevřete záložku **Code**, vyberte model **Sonnet** a úroveň přemýšlení **high**. Dražší model není potřeba.
-3. Otevřete návod pro svůj systém, zkopírujte **celý** text, vložte ho do Claude Code a odešlete:
+1. Kupte si předplatné A nebo B, nainstalujte jeho aplikaci a přihlaste se.
+2. Otevřete návod pro svůj systém, zkopírujte **celý** text, vložte ho do aplikace (Codex nebo Claude Code) a odešlete:
    - **Mac (ověřená cesta):** [SETUP-PROMPT.md](SETUP-PROMPT.md)
    - **Windows (zatím neověřeno):** [SETUP-PROMPT-WINDOWS.md](SETUP-PROMPT-WINDOWS.md)
-4. Claude vás provede krok za krokem, před každou změnou se zeptá a každý krok sám ověří. Hesla a přihlášení zadáváte vždy sami.
-5. Na konci vypíše **DOCTOR report**. Zkopírujte ho do odpovědi na uvítací e-mail. Tak uvidíme, co funguje, aniž bychom potřebovali přístup k vašemu počítači.
+3. Agent vás provede krok za krokem, před každou změnou se zeptá a každý krok sám ověří. Hesla a přihlášení zadáváte vždy sami.
+4. Na konci vypíše **DOCTOR report**. Zkopírujte ho do odpovědi na uvítací e-mail. Tak uvidíme, co funguje, aniž bychom potřebovali přístup k vašemu počítači.
+5. Volitelně: aplikace **T3 Code** na mobil nebo iPad (návod krok 8). Párování s naší verzí T3 Code TPLUS zatím **není ověřené**.
 
 **Pevné verze:** instalujeme přesně tu kombinaci, kterou jsme sami otestovali ([VERSIONS.md](VERSIONS.md)). Nic se samo neaktualizuje; novou verzi vydáme jako nový tag tohoto repozitáře.
 
-**Oprava:** když něco přestane fungovat, otevřete Claude Code a napište: „oprav mi nastavení Agent Jacka podle github.com/m-check1B/agent-jack-setup“. Claude spustí `bin/doctor.sh` a opraví chyby podle [REPAIR.md](REPAIR.md).
+**Oprava:** když něco přestane fungovat, otevřete Codex nebo Claude Code a napište: „oprav mi nastavení Agent Jacka podle github.com/m-check1B/agent-jack-setup“. Agent spustí `bin/doctor.sh` a opraví chyby podle [REPAIR.md](REPAIR.md).
 
-**Prohlížeč pro agenty (volitelné):** rozšíření Claude in Chrome, viz [BROWSER.md](BROWSER.md). **Codex CLI** instaluje `install.sh` vždy; přihlášení `codex login` je volitelné (vlastní předplatné ChatGPT) a zapne lab „Local · Codex“.
+**Prohlížeč pro agenty (volitelné):** rozšíření Claude in Chrome, viz [BROWSER.md](BROWSER.md). **Codex CLI i Claude Code CLI** instaluje `install.sh` vždy. Přihlásit musíte aspoň jeden z nich (`codex login` nebo `claude auth login`); každý zapne svůj lab („Local · Codex“, „Local · Claude Code“).
 
 ### Doporučené nástroje (volitelné)
 Jen doporučení: `install.sh` je neinstaluje a DOCTOR je nekontroluje. Všechno z oficiálních zdrojů, s vlastním účtem.
@@ -80,27 +88,35 @@ Measured on a real install (Mac, October 2026): Claude Code CLI ≈ 0.4 GB, T3 C
 ### 2. Local setup (recommended)
 Agent Jack can also run Bots on your own computer, on your own AI subscription.
 
-**What you get:** Claude Code (app and CLI), [T3 Code TPLUS](https://github.com/m-check1B/t3code-tplus) (our tested build of T3 Code: several AI agents side by side), [Tentacles](https://github.com/m-check1B/t3-code-tentacles) (one agent steers others), [estate-guardian (classifier + router for Tentacles)](https://github.com/m-check1B/estate-guardian) (decides which agent a job goes to; the watchdog itself is optional, for advanced users), and the Agent Jack app paired with your computer.
+**What you get:** Codex or Claude Code (app and CLI; one of them runs the install and then works as the "Local" lab), [T3 Code TPLUS](https://github.com/m-check1B/t3code-tplus) (our tested build of T3 Code: several AI agents side by side), [Tentacles](https://github.com/m-check1B/t3-code-tentacles) (one agent steers others), [estate-guardian (classifier + router for Tentacles)](https://github.com/m-check1B/estate-guardian) (decides which agent a job goes to; the watchdog itself is optional, for advanced users), and the Agent Jack app paired with your computer.
 
-**Cost:** one **Claude Pro** plan (**USD 20/month**), https://claude.com/pricing. Pro has usage limits. When you reach one, Claude tells you when it resets (usually within a few hours), and you wait until then. Nothing is charged extra unless you switch on paid extra usage yourself. Your Bot on our server keeps working.
+**Pick one agent to run the install.** One plan is enough:
+
+| | **A: Codex (ChatGPT Plus)** · new path since v1.0.4 | **B: Claude Code (Claude Pro)** · proven path |
+|---|---|---|
+| Plan | **ChatGPT Plus**, shown at CZK 499/month (≈ USD 20) on https://openai.com/codex | **Claude Pro**, USD 20/month, https://claude.com/pricing |
+| App | **Codex** for macOS: https://openai.com/codex → **Download for macOS** | **Claude**: https://claude.com/download |
+| Where the guide goes | the Codex app: open the folder `~/Developer` (create it) and keep permissions on **Ask for approval** | the **Code** tab, model **Sonnet**, effort **high** |
+
+Both plans have usage limits. When you reach one, the app tells you when it resets (usually within a few hours), and you wait until then. Nothing is charged extra unless you switch on paid extra usage yourself. Your Bot on our server keeps working. You don't need a more expensive model or a higher effort level.
 
 **Steps:**
-1. Get Claude Pro and install the Claude app from https://claude.com/download. Sign in.
-2. Open the **Code** tab, choose model **Sonnet** and effort **high**. You don't need a more expensive model.
-3. Open the guide for your system, copy the **whole** text, paste it into Claude Code and send it:
+1. Get plan A or B, install its app and sign in.
+2. Open the guide for your system, copy the **whole** text, paste it into the app (Codex or Claude Code) and send it:
    - **Mac (proven path):** [SETUP-PROMPT.md](SETUP-PROMPT.md)
    - **Windows (not yet proven):** [SETUP-PROMPT-WINDOWS.md](SETUP-PROMPT-WINDOWS.md)
-   The guides are in Czech; Claude answers in the language you write to it in.
-4. Claude walks you through it step by step, asks before each change and checks each step itself. You always type passwords and sign-ins yourself.
-5. At the end it prints a **DOCTOR report**. Paste it into your reply to the welcome email. That way we can see what works without ever needing access to your machine.
+   The guides are in Czech; the agent answers in the language you write to it in.
+3. The agent walks you through it step by step, asks before each change and checks each step itself. You always type passwords and sign-ins yourself.
+4. At the end it prints a **DOCTOR report**. Paste it into your reply to the welcome email. That way we can see what works without ever needing access to your machine.
+5. Optional: the **T3 Code** app on your phone or iPad (guide step 8). Pairing it with our T3 Code TPLUS build is **not proven yet**.
 
 **Pinned versions:** we install exactly the combination we tested ourselves ([VERSIONS.md](VERSIONS.md)). Nothing updates by itself; a new version ships as a new tag of this repo.
 
-**Repair:** if something stops working, open Claude Code and say "repair my Agent Jack setup using github.com/m-check1B/agent-jack-setup". It runs `bin/doctor.sh` and fixes each FAIL with [REPAIR.md](REPAIR.md).
+**Repair:** if something stops working, open Codex or Claude Code and say "repair my Agent Jack setup using github.com/m-check1B/agent-jack-setup". It runs `bin/doctor.sh` and fixes each FAIL with [REPAIR.md](REPAIR.md).
 
 **For agents:** start at [AGENTS.md](AGENTS.md).
 
-**Browser for agents (optional):** the Claude in Chrome extension, see [BROWSER.md](BROWSER.md). **Codex CLI** is always installed by `install.sh`; signing in with `codex login` is optional (your own ChatGPT plan) and enables the "Local · Codex" lab.
+**Browser for agents (optional):** the Claude in Chrome extension, see [BROWSER.md](BROWSER.md). `install.sh` always installs **both Codex CLI and Claude Code CLI**. Sign in to at least one (`codex login` or `claude auth login`); each one enables its lab ("Local · Codex", "Local · Claude Code").
 
 ### Recommended tools (optional)
 Recommendations only: `install.sh` doesn't install them and DOCTOR doesn't check them. All from official sources, with your own account.

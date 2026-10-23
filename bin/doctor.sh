@@ -42,18 +42,23 @@ if [ -z "$NV" ]; then rec FAIL AJ-NODE-01 node missing ">=$NODE_MIN_MAJOR" homeb
 elif [ "${NV%%.*}" -ge "$NODE_MIN_MAJOR" ]; then rec PASS AJ-NODE-00 node "$NV" ">=$NODE_MIN_MAJOR" homebrew
 else rec FAIL AJ-NODE-02 node "$NV" ">=$NODE_MIN_MAJOR" homebrew; fi
 if command -v git >/dev/null; then rec PASS AJ-GIT-00 git "$(ver git --version)" any apple-clt; else rec FAIL AJ-GIT-01 git missing any apple-clt; fi
-# 3 Claude Code CLI (minimum version; it updates itself)
-CV="$(ver claude --version)"
-if [ -z "$CV" ]; then rec FAIL AJ-CLAUDE-01 claude-cli missing ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code
-elif ! ge "$CV" "$CLAUDE_CLI_MIN"; then rec FAIL AJ-CLAUDE-02 claude-cli "$CV" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code
-elif claude auth status >/dev/null 2>&1; then rec PASS AJ-CLAUDE-00 claude-cli "$CV signed-in" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code
-else rec FAIL AJ-CLAUDE-03 claude-cli "$CV signed-out" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code; fi
-# 3a Codex CLI (minimum version; the "Local · Codex" lab; signed in locally with the user's own plan)
-XV2="$(ver codex --version)"
+# 3 local drivers: Claude Code CLI and Codex CLI. At least one must be signed in (the agent that runs this setup).
+# Codex signed in → Claude is optional (its FAILs become WARN). Claude signed in → Codex sign-in is optional (WARN).
+CV="$(ver claude --version)"; XV2="$(ver codex --version)"
+CS=0; [ -n "$CV" ] && ge "$CV" "$CLAUDE_CLI_MIN" && claude auth status >/dev/null 2>&1 && CS=1
+XS=0; [ -n "$XV2" ] && ge "$XV2" "$CODEX_CLI_MIN" && codex login status >/dev/null 2>&1 && XS=1
+CF=FAIL; CNOTE=""; [ $XS = 1 ] && { CF=WARN; CNOTE=" (optional: Codex is signed in)"; }
+XF=FAIL; XNOTE=""; [ $CS = 1 ] && { XF=WARN; XNOTE=" (optional lab)"; }
+# 3a Claude Code CLI (minimum version; it updates itself)
+if [ -z "$CV" ]; then rec $CF AJ-CLAUDE-01 claude-cli "missing$CNOTE" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code
+elif ! ge "$CV" "$CLAUDE_CLI_MIN"; then rec $CF AJ-CLAUDE-02 claude-cli "$CV$CNOTE" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code
+elif [ $CS = 1 ]; then rec PASS AJ-CLAUDE-00 claude-cli "$CV signed-in" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code
+else rec $CF AJ-CLAUDE-03 claude-cli "$CV signed-out$CNOTE" ">=$CLAUDE_CLI_MIN" npm:@anthropic-ai/claude-code; fi
+# 3a' Codex CLI (minimum version; always installed; the "Local · Codex" lab; signed in locally with the user's own ChatGPT plan)
 if [ -z "$XV2" ]; then rec FAIL AJ-CODEX-01 codex-cli missing ">=$CODEX_CLI_MIN" npm:@openai/codex
 elif ! ge "$XV2" "$CODEX_CLI_MIN"; then rec FAIL AJ-CODEX-02 codex-cli "$XV2" ">=$CODEX_CLI_MIN" npm:@openai/codex
-elif codex login status >/dev/null 2>&1; then rec PASS AJ-CODEX-00 codex-cli "$XV2 signed-in" ">=$CODEX_CLI_MIN" npm:@openai/codex
-else rec WARN AJ-CODEX-03 codex-cli "$XV2 signed-out (optional lab)" ">=$CODEX_CLI_MIN" npm:@openai/codex; fi
+elif [ $XS = 1 ]; then rec PASS AJ-CODEX-00 codex-cli "$XV2 signed-in" ">=$CODEX_CLI_MIN" npm:@openai/codex
+else rec $XF AJ-CODEX-03 codex-cli "$XV2 signed-out$XNOTE" ">=$CODEX_CLI_MIN" npm:@openai/codex; fi
 # 3b stray API overrides (they silently replace your Claude sign-in; names only, values never printed)
 STRAY=""
 for v in ANTHROPIC_BASE_URL ANTHROPIC_AUTH_TOKEN ANTHROPIC_API_KEY; do
@@ -63,12 +68,19 @@ for v in ANTHROPIC_BASE_URL ANTHROPIC_AUTH_TOKEN ANTHROPIC_API_KEY; do
     [ -f "$f" ] && grep -Eq "^[[:space:]]*(export[[:space:]]+)?$v=" "$f" && STRAY="$STRAY $v(~/${f##*/})"
   done
 done
-if [ -n "$STRAY" ]; then rec FAIL AJ-ENV-01 claude-env "${STRAY# }" "no ANTHROPIC_* override" "REPAIR.md AJ-ENV-01"
+if [ -n "$STRAY" ]; then rec $CF AJ-ENV-01 claude-env "${STRAY# }" "no ANTHROPIC_* override" "REPAIR.md AJ-ENV-01"
 else rec PASS AJ-ENV-00 claude-env clean "no ANTHROPIC_* override" shell; fi
 # 3c Claude answers headless (60 s limit; one tiny request)
-if [ -n "$CV" ] && [ -z "$STRAY" ] && claude auth status >/dev/null 2>&1; then
+if [ $CS = 1 ] && [ -z "$STRAY" ]; then
   if [ "$(perl -e 'alarm 60; exec @ARGV' claude -p "Reply with exactly: OK" </dev/null 2>/dev/null | tr -d '[:space:]')" = OK ]; then rec PASS AJ-CLAUDE-05 claude-reply OK OK claude
-  else rec FAIL AJ-CLAUDE-04 claude-reply "no-OK-in-60s" OK "REPAIR.md AJ-CLAUDE-04"; fi
+  else rec $CF AJ-CLAUDE-04 claude-reply "no-OK-in-60s" OK "REPAIR.md AJ-CLAUDE-04"; fi
+fi
+# 3d Codex answers headless (90 s limit; one tiny request, read-only sandbox, run from an empty temp folder)
+if [ $XS = 1 ]; then
+  XT="$(mktemp -d)"
+  if [ "$(cd "$XT" && perl -e 'alarm 90; exec @ARGV' codex exec --skip-git-repo-check --sandbox read-only "Reply with exactly: OK" </dev/null 2>/dev/null | tail -1 | tr -d '[:space:]')" = OK ]; then rec PASS AJ-CODEX-05 codex-reply OK OK codex
+  else rec $XF AJ-CODEX-04 codex-reply "no-OK-in-90s" OK "REPAIR.md AJ-CODEX-04"; fi
+  rmdir "$XT" 2>/dev/null
 fi
 # 4 T3 Code (our pinned fork)
 T3="$(app_path "$T3_APP_NAME")"
@@ -124,8 +136,8 @@ else JV="$(plist_ver "$AJ")"
 fi
 # 8 manual checks (inside the Agent Jack app; doctor cannot see them)
 rec SKIP AJ-PAIR-00 pairing manual "Paired · ready" "Settings → Computers & labs"
-rec SKIP AJ-LOCAL-00 local-bot manual "Local reply OK" "Bot → Provider → Local → Claude Code"
-rec SKIP AJ-BROWSER-00 browser "manual (optional)" ">=1 connected browser" "BROWSER.md: ask Claude Code to list connected browsers"
+rec SKIP AJ-LOCAL-00 local-bot manual "Local reply OK" "Bot → Provider → Local → Codex or Claude Code"
+rec SKIP AJ-BROWSER-00 browser "manual (optional)" ">=1 connected browser" "BROWSER.md: ask your agent to list connected browsers"
 
 if [ $JSON = 1 ]; then
   printf '{"doctor":"agent-jack-setup","setup_tag":"%s","fails":%d,"checks":[' "$SETUP_TAG" "$FAILS"
