@@ -6,7 +6,7 @@
 
 Mluv se mnou **česky** (nebo jazykem, kterým ti píšu), jednoduše a krok za krokem. Pracuješ na mém počítači s Windows 11 a příkazy spouštíš ve **Windows PowerShellu**.
 
-> **Co dnes na Windows funguje:** aplikace **Agent Jack**, přihlášená, s Botem na **našem serveru** (Provider → **Server**). Tím začínáme. **Bot na Local** (na vašem počítači) na Windows **čeká na Windows verzi T3 Code TPLUS**, která zatím nevyšla. Do té doby doctor u T3 (AJ-PIN-00), u Tentacles doctoru (AJ-TENT-03) a u Local Bota (AJ-LOCAL-00) ukáže **WAIT** (čeká), ne FAIL. To je v pořádku: nic z toho neopravuj, dokonči ostatní kroky a v závěru mi napiš „Local Bot: čeká na T3 Code TPLUS pro Windows“.
+> **Co dnes na Windows funguje:** aplikace **Agent Jack**, přihlášená, s Botem na **našem serveru** (lab **Server · …**). Tím začínáme. **Bot na Local** (na vašem počítači) na Windows **čeká, až ověříme T3 Code (Beta) pro Windows** (oficiální Windows verze existuje, naše pevná verze zatím není nastavená). Do té doby doctor u T3 (AJ-PIN-00), u Tentacles doctoru (AJ-TENT-03) a u Local Bota (AJ-LOCAL-00) ukáže **WAIT** (čeká), ne FAIL. To je v pořádku: nic z toho neopravuj, dokonči ostatní kroky a v závěru mi napiš „Local Bot: čeká na T3 Code (Beta) pro Windows“.
 > Ověřovací běh celé cesty na čistém Windows 11 je naplánovaný; ověřeno dne: _<YYYY-MM-DD, doplní se po ověřovacím běhu>_.
 
 ## Pravidla (vždy)
@@ -43,11 +43,11 @@ Mluv se mnou **česky** (nebo jazykem, kterým ti píšu), jednoduše a krok za 
 5. Po každé instalaci dej řádek PATH z pravidel do **téhož** příkazu jako kontrolu (např. `<řádek>; node -v; git --version; py -3.12 --version`). Ověření: všechny vypíšou verzi; spolehlivě to potvrdí doctor v kroku 4 (AJ-NODE-00, AJ-GIT-00).
 
 ## Krok 3: Stáhni návod v pevné verzi
-Když už jsi návod stáhl při vložení bloku z README a jsi v jeho složce, klonování přeskoč a spusť jen `git checkout v1.1.0`. Jinak po souhlasu:
+Když už jsi návod stáhl při vložení bloku z README a jsi v jeho složce, klonování přeskoč a spusť jen `git checkout v1.1.1`. Jinak po souhlasu:
 ```powershell
 New-Item -ItemType Directory -Force -Path "$HOME\Developer" | Out-Null; Set-Location "$HOME\Developer"
 git clone https://github.com/m-check1B/agent-jack-setup.git
-Set-Location agent-jack-setup; git checkout v1.1.0
+Set-Location agent-jack-setup; git checkout v1.1.1
 ```
 Pak si přečti `AGENTS.md` a od teď se jím řiď.
 
@@ -56,9 +56,9 @@ Spusť `powershell -NoProfile -ExecutionPolicy Bypass -File bin/doctor.ps1` a li
 
 ## Krok 5: Instalace
 0. **Google Chrome** (povinný): když chybí, pošli mě na https://www.google.com/chrome (stáhnu a nainstaluji sám; instalace jen pro mého uživatele nepotřebuje správce). Nebo po mém souhlasu `winget install --id Google.Chrome -e --source winget` (okno UAC potvrdím sám).
-1. Po souhlasu `powershell -NoProfile -ExecutionPolicy Bypass -File bin/install.ps1 all`. Nainstaluje Claude Code CLI (winget, pro uživatele), Codex CLI (npm), Tentacles (pevný tag v `~\Developer\t3-code-tentacles`, spouští se přes `bin\tentacles.cmd` a `npm link` ho propojí tam, kde ho aplikace Agent Jack hledá) a estate-guardian (klasifikátor + router pro Tentacles, venv v `~\.agent-jack\venv`) v přesných verzích. T3 Code TPLUS vynechá s WAIT, dokud jeho Windows verze nevyjde (AJ-PIN-00). Je bezpečné ho pustit znovu.
+1. Po souhlasu `powershell -NoProfile -ExecutionPolicy Bypass -File bin/install.ps1 all`. Nainstaluje Claude Code CLI (winget, pro uživatele), Codex CLI (npm), Tentacles (pevný tag v `~\Developer\t3-code-tentacles`, spouští se přes `bin\tentacles.cmd` a `npm link` ho propojí tam, kde ho aplikace Agent Jack hledá) a estate-guardian (klasifikátor + router pro Tentacles, venv v `~\.agent-jack\venv`) v přesných verzích. T3 Code (Beta) vynechá s WAIT, dokud není nastavená jeho pevná verze pro Windows (AJ-PIN-00). Je bezpečné ho pustit znovu.
 2. Příkazy `codex` a `claude` spouštěj s řádkem PATH v **témže** příkazu (např. `<řádek>; claude auth login`). Přihlášení dělám já. Doporučeně obě (každé ze svého předplatného), aspoň jedno: `codex login` (otevře se prohlížeč, přihlásím se svým ChatGPT Plus) a `claude auth login` (Claude Pro).
-3. Až bude T3 Code TPLUS pro Windows vydaný: `bin/install.ps1 t3`, otevřu **T3 Code TPLUS** (SmartScreen: **Další informace → Přesto spustit**) a v **Settings → Providers** zkontroluju, že jsou **Codex** a **Claude Code** připravené (jinak `REPAIR.md` AJ-T3-06).
+3. Až bude v `versions.env` nastavená pevná verze T3 Code (Beta) pro Windows (doctor už neukazuje WAIT AJ-PIN-00): `bin/install.ps1 t3`, otevřu **T3 Code (Beta)** (když se ukáže SmartScreen: **Další informace → Přesto spustit**) a v **Settings → Providers** zkontroluju, že jsou **Codex** a **Claude Code** připravené (jinak `REPAIR.md` AJ-T3-06).
 4. Volitelně (zeptej se mě): `bin/install.ps1 guardian` (samotný hlídač estate-guardian, pro pokročilé; jen stažení, žádná naplánovaná úloha).
 5. Znovu `bin/doctor.ps1`. Každý FAIL oprav podle `REPAIR.md` a ověř dalším doctorem.
 6. **Doporučeno, druhá aplikace:** když instalaci řídí Codex, nainstaluji si i aplikaci Claude z https://claude.com/download (Claude Pro); když ji řídí Claude Code, nainstaluji si i aplikaci Codex z https://openai.com/codex (ChatGPT Plus).
@@ -68,21 +68,21 @@ Instalátor Agent Jacka pro Windows je zatím **nepodepsaný**, proto Windows uk
 1. V prohlížeči se přihlásím na https://agentjack.kraliki.com/app (**Google**, nebo e-mail a heslo, pokud jsem je dostal) a otevřu https://agentjack.kraliki.com/downloads → **Windows · x64 · exe** → **Stáhnout**. Když stažení není dostupné, **nehledej jinde**: FAIL.
 2. **Než ho spustím**, ověř otisk: `Get-FileHash -Algorithm SHA256 "$HOME\Downloads\AgentJack-Setup-<verze>.exe"` (když je souborů víc, zeptej se mě, který) a porovnej ho s hodnotou SHA-256 na stránce stažení. Neshoduje se → soubor nespouštěj, smaž ho po mém souhlasu a stáhni znovu; podruhé → FAIL.
 3. Spustím instalátor sám. SmartScreen ukáže **„Systém Windows ochránil váš počítač“** → kliknu na **Další informace** → zkontroluji název souboru `AgentJack-Setup-…exe` → **Přesto spustit**. Instaluje se jen pro mého uživatele, bez práv správce.
-4. Spustím aplikaci a přihlásím se stejně jako na webu. Bot zůstává na **Provider → Server** (náš server). Ověření: hlavní Bot odpoví na „Odpověz jen slovem OK“. **Tím je dnešní Windows cesta hotová.**
+4. Spustím aplikaci a přihlásím se stejně jako na webu. Bot zůstává na labu **Server · …** (náš server; ozubené kolečko → Engine). Ověření: hlavní Bot odpoví na „Odpověz jen slovem OK“. **Tím je dnešní Windows cesta hotová.**
 
 ## Krok 7: Pokus o spárování (zaznamenat, neopravovat)
-Bot na Local na Windows čeká na Windows verzi T3 Code TPLUS. Spárování proto jen **zkusíme a zapíšeme výsledek**; když nevyjde, **nic neopravuj** a Bota nech na **Server**.
+Bot na Local na Windows čeká na ověřenou pevnou verzi T3 Code (Beta) pro Windows. Spárování proto jen **zkusíme a zapíšeme výsledek**; když nevyjde, **nic neopravuj** a Bota nech na **Server**.
 1. V aplikaci **Settings → Computers & labs** → **Pair this … so agents can use its labs** (text může říkat „Mac“, to nevadí; souhlas potvrdím sám). Zapiš přesně, co aplikace ukáže (např. **Paired · ready**, nebo hláška chyby).
-2. Local Bota nezkoušej, dokud doctor u AJ-LOCAL-00 ukazuje WAIT. Do reportu zapiš „Local Bot: čeká na T3 Code TPLUS pro Windows“.
+2. Local Bota nezkoušej, dokud doctor u AJ-LOCAL-00 ukazuje WAIT. Do reportu zapiš „Local Bot: čeká na T3 Code (Beta) pro Windows“.
 
 ## Krok 7b (volitelné): Rozšíření do Chrome
 Stejně jako na Macu, podle [BROWSER.md](BROWSER.md): Codex → rozšíření **ChatGPT** (vydavatel **OpenAI**, id `hehggadaopoacecdllhhajmbjkdcmajg`); Claude Code → **Claude in Chrome** (vydavatel **Anthropic**). Jiná rozšíření s podobným názvem neinstaluj.
 
 ## Krok 8: DOCTOR report
-Spusť `powershell -NoProfile -ExecutionPolicy Bypass -File bin/doctor.ps1` naposledy. Do výstupu doplň ruční řádky: záloha (potvrzena ano/ne), Bot na Server odpověděl (ano/ne), pokus o párování (co aplikace ukázala) a „Local Bot: čeká na T3 Code TPLUS pro Windows“. Pak mi napiš **srozumitelné shrnutí**: co funguje, co čeká (Local Bot), co ne, a kroky, které můžu udělat jen já (přihlášení, kódy 2FA, okna UAC a SmartScreen, platby). Řekni mi, ať celý blok zkopíruju do odpovědi na uvítací e-mail. Ve výstupu nesmí být hesla, klíče, e-maily ani cesty s mým jménem (domovská složka = `~`).
+Spusť `powershell -NoProfile -ExecutionPolicy Bypass -File bin/doctor.ps1` naposledy. Do výstupu doplň ruční řádky: záloha (potvrzena ano/ne), Bot na Server odpověděl (ano/ne), pokus o párování (co aplikace ukázala) a „Local Bot: čeká na T3 Code (Beta) pro Windows“. Pak mi napiš **srozumitelné shrnutí**: co funguje, co čeká (Local Bot), co ne, a kroky, které můžu udělat jen já (přihlášení, kódy 2FA, okna UAC a SmartScreen, platby). Řekni mi, ať celý blok zkopíruju do odpovědi na uvítací e-mail. Ve výstupu nesmí být hesla, klíče, e-maily ani cesty s mým jménem (domovská složka = `~`).
 
 ## Krok 9 (volitelné): T3 Code na mobilu nebo iPadu
-Stejně jako na Macu (SETUP-PROMPT.md krok 8), až bude T3 Code TPLUS pro Windows vydaný. Do té doby krok přeskoč a v reportu napiš „mobil: neověřeno“.
+Stejně jako na Macu (SETUP-PROMPT.md krok 8), až bude nastavená pevná verze T3 Code (Beta) pro Windows. Do té doby krok přeskoč a v reportu napiš „mobil: neověřeno“.
 
 Na úplný konec mi nabídni volitelné doporučené nástroje z README (Linear, GitHub + `gh` přes `winget install --id GitHub.cli -e --source winget`, Thunderbird) a nainstaluj je jen, když řeknu ano, a jen z jejich oficiálních zdrojů.
 

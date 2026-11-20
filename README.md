@@ -24,7 +24,7 @@ Před každou instalací, stažením nebo změnou se mě zeptej; síťové pří
    (každý příkaz je nový proces; když to pořád nejde, požádej mě o restart této aplikace):
    $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
    git clone https://github.com/m-check1B/agent-jack-setup.git
-   cd agent-jack-setup ; git checkout v1.1.0
+   cd agent-jack-setup ; git checkout v1.1.1
 2. Přečti si AGENTS.md a řiď se jeho pravidly.
 3. Zjisti můj operační systém. macOS: postupuj podle SETUP-PROMPT.md.
    Windows 11: podle SETUP-PROMPT-WINDOWS.md. Jiný systém: zastav se a řekni mi to.
@@ -48,7 +48,7 @@ Před každou instalací, stažením nebo změnou se mě zeptej.
    (každý příkaz je nový proces; když to pořád nejde, požádej mě o restart této aplikace):
    $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
    git clone https://github.com/m-check1B/agent-jack-setup.git
-   cd agent-jack-setup ; git checkout v1.1.0
+   cd agent-jack-setup ; git checkout v1.1.1
 2. Přečti si AGENTS.md a řiď se jeho pravidly.
 3. Zjisti můj operační systém. macOS: postupuj podle SETUP-PROMPT.md.
    Windows 11: podle SETUP-PROMPT-WINDOWS.md. Jiný systém: zastav se a řekni mi to.
@@ -72,7 +72,7 @@ Před každou instalací, stažením nebo změnou se mě zeptej.
    (každý příkaz je nový proces; když to pořád nejde, požádej mě o restart této aplikace):
    $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
    git clone https://github.com/m-check1B/agent-jack-setup.git
-   cd agent-jack-setup ; git checkout v1.1.0
+   cd agent-jack-setup ; git checkout v1.1.1
 2. Přečti si AGENTS.md a řiď se jeho pravidly.
 3. Zjisti můj operační systém. macOS: postupuj podle SETUP-PROMPT.md.
    Windows 11: podle SETUP-PROMPT-WINDOWS.md. Jiný systém: zastav se a řekni mi to.
@@ -89,7 +89,7 @@ Před každou instalací, stažením nebo změnou se mě zeptej.
 **Než pustíte AI na svůj počítač, zálohujte si data** (Time Machine / Historie souborů / kopie důležitých složek mimo počítač). Doporučujeme agentům dát samostatný uživatelský účet nebo aspoň samostatnou složku (např. `~/Developer`). Před prvním spuštěním: **záloha + dost místa na disku** (viz níže).
 
 ### Místo na disku
-Měřeno na reálné instalaci (Mac, říjen 2026): Claude Code CLI ≈ 0,4 GB, Codex CLI ≈ 0,3 GB, T3 Code TPLUS ≈ 0,3 GB, Tentacles ≈ 25 MB, estate-guardian (venv) ≈ 15 MB, aplikace Agent Jack ≈ 0,4 GB, Homebrew + Node.js 1–2 GB (pokud je ještě nemáte). Samotná instalace tedy ≈ 2–3 GB, ale **agenti při práci rychle přidávají další data** (pracovní kopie, node_modules, logy, cache; datová složka T3 může narůst na ~10 GB). **Doporučujeme mít volných aspoň 20 GB**; pod 5 GB instalace nezačne.
+Měřeno na reálné instalaci (Mac, říjen 2026): Claude Code CLI ≈ 0,4 GB, Codex CLI ≈ 0,3 GB, T3 Code (Beta) ≈ 0,55 GB (aplikace 0.1.11 na Macu s Apple Silicon, změřeno 20. 11. 2026), Tentacles ≈ 25 MB, estate-guardian (venv) ≈ 15 MB, aplikace Agent Jack ≈ 0,4 GB, Homebrew + Node.js 1–2 GB (pokud je ještě nemáte). Samotná instalace tedy ≈ 2–3 GB, ale **agenti při práci rychle přidávají další data** (pracovní kopie, node_modules, logy, cache; datová složka T3 může narůst na ~10 GB). **Doporučujeme mít volných aspoň 20 GB**; pod 5 GB instalace nezačne.
 
 ### Doporučený hardware
 Mac s čipem **Apple M3 nebo novějším**, **16 GB RAM** a **disk 512 GB**. Na slabším Macu (Intel, M1/M2, méně paměti nebo menší disk) instalace proběhne, jen DOCTOR ukáže upozornění (WARN) a agenti poběží pomaleji.
@@ -105,10 +105,10 @@ Mac s čipem **Apple M3 nebo novějším**, **16 GB RAM** a **disk 512 GB**. Na 
 |---|---|---|
 | Aplikace Agent Jack | **podepsaná a notarizovaná** (Apple), otevře se bez varování | instalátor je zatím **nepodepsaný**, proto Windows ukáže SmartScreen „Systém Windows ochránil váš počítač“: klikněte na **Další informace** → zkontrolujte název `AgentJack-Setup-…exe` → **Přesto spustit**. **Předtím** ověřte otisk: `Get-FileHash -Algorithm SHA256 "$HOME\Downloads\AgentJack-Setup-<verze>.exe"` se musí shodovat s hodnotou SHA-256 na stránce stažení |
 | Kde ji stáhnout | **jen** v přihlášené webové aplikaci, https://agentjack.kraliki.com/downloads; nikdy z GitHubu | stejně |
-| S čím začnete | aplikace Agent Jack + Bot na Local i na našem serveru | aplikace **Agent Jack**, přihlášená, s Botem na **našem serveru** (Provider → Server) |
-| Bot na Local (na vašem počítači) | ano (Codex a Claude Code v T3 Code TPLUS) | **čeká na Windows verzi T3 Code TPLUS**; do té doby Bot běží na našem serveru a doctor ukazuje WAIT (ne FAIL) |
-| T3 Code TPLUS | vydaný (zatím není notarizovaný: poprvé pravým tlačítkem → **Otevřít**) | Windows verze **zatím nevyšla**; doctor ukazuje WAIT AJ-PIN-00 |
-| Tentacles | ano | ano (pevný tag, propojený přes `npm link`, aby ho aplikace našla); připravený až s T3 Code TPLUS (do té doby WAIT AJ-TENT-03) |
+| S čím začnete | aplikace Agent Jack + Bot na Local i na našem serveru | aplikace **Agent Jack**, přihlášená, s Botem na **našem serveru** (lab **Server · …**) |
+| Bot na Local (na vašem počítači) | ano (Codex a Claude Code v T3 Code (Beta)) | **čeká, až ověříme T3 Code (Beta) pro Windows** (oficiální Windows verze existuje, naše pevná verze zatím není nastavená); do té doby Bot běží na našem serveru a doctor ukazuje WAIT (ne FAIL) |
+| T3 Code (Beta) | oficiální aplikace z [pingdotgg/t3code](https://github.com/pingdotgg/t3code); instaluje ji `install.sh` a dál se aktualizuje sama | pevná verze pro Windows **zatím není nastavená** (ověření čeká); doctor ukazuje WAIT AJ-PIN-00 |
+| Tentacles | ano | ano (pevný tag, propojený přes `npm link`, aby ho aplikace našla); připravený až s T3 Code (Beta) (do té doby WAIT AJ-TENT-03) |
 | Codex CLI, Claude Code CLI, estate-classify, Chrome | ano | ano |
 | Stav návodu | ověřená cesta | ověřovací běh naplánovaný; ověřeno dne: _<doplní se>_ |
 
@@ -121,7 +121,7 @@ Mac s čipem **Apple M3 nebo novějším**, **16 GB RAM** a **disk 512 GB**. Na 
 ### 2. Lokální nastavení (doporučeno)
 Agent Jack může pouštět Boty i přímo na vašem počítači, přes vaše vlastní předplatné AI.
 
-**Co získáte:** Codex a Claude Code (aplikace i příkazový řádek; běží jako dva laby „Local · Codex“ a „Local · Claude Code“), [T3 Code TPLUS](https://github.com/m-check1B/t3code-tplus) (naše otestovaná verze T3 Code: víc AI agentů vedle sebe), [Tentacles](https://github.com/m-check1B/t3-code-tentacles) (jeden agent řídí další), [estate-guardian (klasifikátor + router pro Tentacles)](https://github.com/m-check1B/estate-guardian) (rozhoduje, kterému agentovi práce patří; samotný hlídač je volitelný pro pokročilé) a aplikaci Agent Jack spárovanou s počítačem.
+**Co získáte:** Codex a Claude Code (aplikace i příkazový řádek; běží jako dva laby „Local · Codex“ a „Local · Claude Code“), [T3 Code (Beta)](https://github.com/pingdotgg/t3code) (oficiální aplikace T3 Code: víc AI agentů vedle sebe), [Tentacles](https://github.com/m-check1B/t3-code-tentacles) (jeden agent řídí další), [estate-guardian (klasifikátor + router pro Tentacles)](https://github.com/m-check1B/estate-guardian) (rozhoduje, kterému agentovi práce patří; samotný hlídač je volitelný pro pokročilé) a aplikaci Agent Jack spárovanou s počítačem.
 
 **Co budete mít:**
 
@@ -129,8 +129,8 @@ Agent Jack může pouštět Boty i přímo na vašem počítači, přes vaše vl
 |---|---|---|
 | Předplatné | **ChatGPT Plus** + **Claude Pro** (obě ≈ 20 USD měsíčně) | — |
 | Agent | **Codex CLI** + aplikace Codex, **Claude Code CLI** + aplikace Claude; v T3 oba laby Local | — |
-| Pracovní prostředí | **T3 Code TPLUS**, **Tentacles**, estate-guardian (klasifikátor) | samotný hlídač estate-guardian (pro pokročilé) |
-| Agent Jack | **aplikace Agent Jack** spárovaná s počítačem | aplikace **T3 Code** na mobil / iPad (párování s TPLUS zatím neověřené) |
+| Pracovní prostředí | **T3 Code (Beta)**, **Tentacles**, estate-guardian (klasifikátor) | samotný hlídač estate-guardian (pro pokročilé) |
+| Agent Jack | **aplikace Agent Jack** spárovaná s počítačem | aplikace **T3 Code** na mobil / iPad (párování s T3 Code (Beta) zatím neověřené) |
 | Prohlížeč | **Google Chrome** + doporučená rozšíření **Claude in Chrome** (Anthropic) a **ChatGPT** (OpenAI, pro Codex, pokud ho máte k dispozici: postupné zpřístupnění, nastavení pracovního prostoru); viz [BROWSER.md](BROWSER.md) | — |
 
 **Náklady:** doporučené minimum jsou **obě předplatná, ≈ 2 × 20 USD měsíčně**:
@@ -150,9 +150,9 @@ Instalaci řídí **jedna** z obou aplikací, kterákoli. Když máte zatím jen
    - **Windows 11 (ověřovací běh naplánovaný; Bot zatím na našem serveru):** [SETUP-PROMPT-WINDOWS.md](SETUP-PROMPT-WINDOWS.md)
 3. Agent vás provede krok za krokem, před každou změnou se zeptá a každý krok sám ověří. Hesla a přihlášení zadáváte vždy sami.
 4. Na konci vypíše **DOCTOR report**. Zkopírujte ho do odpovědi na uvítací e-mail. Tak uvidíme, co funguje, aniž bychom potřebovali přístup k vašemu počítači.
-5. Volitelně: aplikace **T3 Code** na mobil nebo iPad (návod krok 8). Párování s naší verzí T3 Code TPLUS zatím **není ověřené**.
+5. Volitelně: aplikace **T3 Code** na mobil nebo iPad (návod krok 8). Párování s T3 Code (Beta) jsme zatím **neověřili**.
 
-**Pevné verze:** instalujeme přesně tu kombinaci, kterou jsme sami otestovali ([VERSIONS.md](VERSIONS.md)). Nic se samo neaktualizuje; novou verzi vydáme jako nový tag tohoto repozitáře.
+**Pevné verze:** instalujeme přesně tu kombinaci, kterou jsme sami otestovali ([VERSIONS.md](VERSIONS.md)). Kromě T3 Code (Beta) a Claude Code, které se aktualizují samy (doctor hlídá podporovaný rozsah T3 a minimální verzi Claude Code), se nic samo neaktualizuje; novou verzi vydáme jako nový tag tohoto repozitáře.
 
 **Oprava:** když něco přestane fungovat, otevřete Codex nebo Claude Code a napište: „oprav mi nastavení Agent Jacka podle github.com/m-check1B/agent-jack-setup“. Agent spustí `bin/doctor.sh` (Windows: `bin/doctor.ps1`) a opraví chyby podle [REPAIR.md](REPAIR.md).
 
@@ -193,7 +193,7 @@ Ask me before every install, download or change; run network commands only with 
    (each command is a new process; if it still fails, ask me to restart this app):
    $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
    git clone https://github.com/m-check1B/agent-jack-setup.git
-   cd agent-jack-setup ; git checkout v1.1.0
+   cd agent-jack-setup ; git checkout v1.1.1
 2. Read AGENTS.md and follow its rules.
 3. Detect my operating system. macOS: follow SETUP-PROMPT.md.
    Windows 11: follow SETUP-PROMPT-WINDOWS.md. Anything else: stop and tell me.
@@ -217,7 +217,7 @@ Ask me before every install, download or change.
    (each command is a new process; if it still fails, ask me to restart this app):
    $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
    git clone https://github.com/m-check1B/agent-jack-setup.git
-   cd agent-jack-setup ; git checkout v1.1.0
+   cd agent-jack-setup ; git checkout v1.1.1
 2. Read AGENTS.md and follow its rules.
 3. Detect my operating system. macOS: follow SETUP-PROMPT.md.
    Windows 11: follow SETUP-PROMPT-WINDOWS.md. Anything else: stop and tell me.
@@ -241,7 +241,7 @@ Ask me before every install, download or change.
    (each command is a new process; if it still fails, ask me to restart this app):
    $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
    git clone https://github.com/m-check1B/agent-jack-setup.git
-   cd agent-jack-setup ; git checkout v1.1.0
+   cd agent-jack-setup ; git checkout v1.1.1
 2. Read AGENTS.md and follow its rules.
 3. Detect my operating system. macOS: follow SETUP-PROMPT.md.
    Windows 11: follow SETUP-PROMPT-WINDOWS.md. Anything else: stop and tell me.
@@ -258,7 +258,7 @@ Ask me before every install, download or change.
 **Before you let AI run on your computer, back up your data** (Time Machine / File History / a copy of important folders off the computer). We recommend giving the agents a separate user account, or at least a separate folder (e.g. `~/Developer`). Before the first run: **a backup + enough disk space** (see below).
 
 ### Disk space
-Measured on a real install (Mac, October 2026): Claude Code CLI ≈ 0.4 GB, Codex CLI ≈ 0.3 GB, T3 Code TPLUS ≈ 0.3 GB, Tentacles ≈ 25 MB, estate-guardian (venv) ≈ 15 MB, the Agent Jack app ≈ 0.4 GB, Homebrew + Node.js 1–2 GB (if you don't have them yet). So the install itself is ≈ 2–3 GB, but **agents add data quickly while they work** (working copies, node_modules, logs, caches; T3's data folder can grow to ~10 GB). **Keep at least 20 GB free**; below 5 GB the install won't start.
+Measured on a real install (Mac, October 2026): Claude Code CLI ≈ 0.4 GB, Codex CLI ≈ 0.3 GB, T3 Code (Beta) ≈ 0.55 GB (the 0.1.11 app on an Apple Silicon Mac, measured 20 Nov 2026), Tentacles ≈ 25 MB, estate-guardian (venv) ≈ 15 MB, the Agent Jack app ≈ 0.4 GB, Homebrew + Node.js 1–2 GB (if you don't have them yet). So the install itself is ≈ 2–3 GB, but **agents add data quickly while they work** (working copies, node_modules, logs, caches; T3's data folder can grow to ~10 GB). **Keep at least 20 GB free**; below 5 GB the install won't start.
 
 ### Recommended hardware
 A Mac with an **Apple M3 chip or later**, **16 GB RAM** and a **512 GB disk**. On a smaller Mac (Intel, M1/M2, less memory or a smaller disk) the install still works; DOCTOR just shows a warning (WARN) and agents run slower.
@@ -274,10 +274,10 @@ A Mac with an **Apple M3 chip or later**, **16 GB RAM** and a **512 GB disk**. O
 |---|---|---|
 | Agent Jack app | **signed and notarised** (Apple); it opens without a warning | the installer is **not signed yet**, so Windows shows SmartScreen "Windows protected your PC": click **More info** → check the name `AgentJack-Setup-…exe` → **Run anyway**. **Before that**, check its fingerprint: `Get-FileHash -Algorithm SHA256 "$HOME\Downloads\AgentJack-Setup-<version>.exe"` must match the SHA-256 shown on the downloads page |
 | Where to get it | **only** inside the signed-in web app, https://agentjack.kraliki.com/downloads; never from GitHub | the same |
-| What you start with | the Agent Jack app + the Bot on Local and on our server | the **Agent Jack app**, signed in, with the Bot on **our server** (Provider → Server) |
-| Local Bot (on your computer) | yes (Codex and Claude Code in T3 Code TPLUS) | **waits for a Windows build of T3 Code TPLUS**; until then the Bot runs on our server and doctor shows WAIT (not FAIL) |
-| T3 Code TPLUS | released (not notarised yet: the first time, right-click → **Open**) | the Windows build is **not released yet**; doctor shows WAIT AJ-PIN-00 |
-| Tentacles | yes | yes (pinned tag, linked with `npm link` so the app finds it); ready only once T3 Code TPLUS is there (WAIT AJ-TENT-03 until then) |
+| What you start with | the Agent Jack app + the Bot on Local and on our server | the **Agent Jack app**, signed in, with the Bot on **our server** (lab **Server · …**) |
+| Local Bot (on your computer) | yes (Codex and Claude Code in T3 Code (Beta)) | **waits until we have proven T3 Code (Beta) on Windows** (the official Windows build exists; our pin is not set yet); until then the Bot runs on our server and doctor shows WAIT (not FAIL) |
+| T3 Code (Beta) | the official app from [pingdotgg/t3code](https://github.com/pingdotgg/t3code); `install.sh` installs it and it then updates itself | the Windows pin is **not set yet** (proof pending); doctor shows WAIT AJ-PIN-00 |
+| Tentacles | yes | yes (pinned tag, linked with `npm link` so the app finds it); ready only once T3 Code (Beta) is there (WAIT AJ-TENT-03 until then) |
 | Codex CLI, Claude Code CLI, estate-classify, Chrome | yes | yes |
 | Guide status | proven path | proof run scheduled; proven on: _<to be filled in>_ |
 
@@ -290,7 +290,7 @@ A Mac with an **Apple M3 chip or later**, **16 GB RAM** and a **512 GB disk**. O
 ### 2. Local setup (recommended)
 Agent Jack can also run Bots on your own computer, on your own AI subscription.
 
-**What you get:** Codex and Claude Code (app and CLI; they run as two labs, "Local · Codex" and "Local · Claude Code"), [T3 Code TPLUS](https://github.com/m-check1B/t3code-tplus) (our tested build of T3 Code: several AI agents side by side), [Tentacles](https://github.com/m-check1B/t3-code-tentacles) (one agent steers others), [estate-guardian (classifier + router for Tentacles)](https://github.com/m-check1B/estate-guardian) (decides which agent a job goes to; the watchdog itself is optional, for advanced users), and the Agent Jack app paired with your computer.
+**What you get:** Codex and Claude Code (app and CLI; they run as two labs, "Local · Codex" and "Local · Claude Code"), [T3 Code (Beta)](https://github.com/pingdotgg/t3code) (the official T3 Code app: several AI agents side by side), [Tentacles](https://github.com/m-check1B/t3-code-tentacles) (one agent steers others), [estate-guardian (classifier + router for Tentacles)](https://github.com/m-check1B/estate-guardian) (decides which agent a job goes to; the watchdog itself is optional, for advanced users), and the Agent Jack app paired with your computer.
 
 **What you end up with:**
 
@@ -298,8 +298,8 @@ Agent Jack can also run Bots on your own computer, on your own AI subscription.
 |---|---|---|
 | Plans | **ChatGPT Plus** + **Claude Pro** (each ≈ USD 20/month) | — |
 | Agent | **Codex CLI** + the Codex app, **Claude Code CLI** + the Claude app; both Local labs in T3 | — |
-| Workspace | **T3 Code TPLUS**, **Tentacles**, estate-guardian (classifier) | the estate-guardian watchdog itself (advanced) |
-| Agent Jack | the **Agent Jack app**, paired with your computer | the **T3 Code** app on your phone / iPad (pairing with TPLUS not proven yet) |
+| Workspace | **T3 Code (Beta)**, **Tentacles**, estate-guardian (classifier) | the estate-guardian watchdog itself (advanced) |
+| Agent Jack | the **Agent Jack app**, paired with your computer | the **T3 Code** app on your phone / iPad (pairing with T3 Code (Beta) not proven yet) |
 | Browser | **Google Chrome** + the recommended **Claude in Chrome** (Anthropic) and **ChatGPT** (OpenAI, for Codex, where available: rollout and workspace settings) extensions; see [BROWSER.md](BROWSER.md) | — |
 
 **Cost:** the recommended minimum is **both plans, ≈ 2 × USD 20/month**:
@@ -320,9 +320,9 @@ Agent Jack can also run Bots on your own computer, on your own AI subscription.
    The guides are in Czech; the agent answers in the language you write to it in.
 3. The agent walks you through it step by step, asks before each change and checks each step itself. You always type passwords and sign-ins yourself.
 4. At the end it prints a **DOCTOR report**. Paste it into your reply to the welcome email. That way we can see what works without ever needing access to your machine.
-5. Optional: the **T3 Code** app on your phone or iPad (guide step 8). Pairing it with our T3 Code TPLUS build is **not proven yet**.
+5. Optional: the **T3 Code** app on your phone or iPad (guide step 8). We have **not proven** pairing it with T3 Code (Beta) yet.
 
-**Pinned versions:** we install exactly the combination we tested ourselves ([VERSIONS.md](VERSIONS.md)). Nothing updates by itself; a new version ships as a new tag of this repo.
+**Pinned versions:** we install exactly the combination we tested ourselves ([VERSIONS.md](VERSIONS.md)). Apart from T3 Code (Beta) and Claude Code, which update themselves (doctor checks the supported T3 range and the minimum Claude Code version), nothing updates by itself; a new version ships as a new tag of this repo.
 
 **Repair:** if something stops working, open Codex or Claude Code and say "repair my Agent Jack setup using github.com/m-check1B/agent-jack-setup". It runs `bin/doctor.sh` (Windows: `bin/doctor.ps1`) and fixes each FAIL with [REPAIR.md](REPAIR.md).
 

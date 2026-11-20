@@ -43,10 +43,14 @@ function Do-Codex {
   "ok codex-cli $($P.CODEX_CLI_MIN) (sign in yourself: codex login)"
 }
 
+# a >= b on the numeric x.y.z part (a prerelease suffix is ignored)
+function Ver-Ge($a, $b) { try { return ([version](("$a" -replace '[-+].*$', ''))) -ge ([version](("$b" -replace '[-+].*$', ''))) } catch { return $false } }
+
 function Do-T3 {
   Need-Pin $P.T3_ASSET_WIN_X64 T3_ASSET_WIN_X64
   $have = Get-InstalledApp ($P.T3_APP_NAME + '*')
-  if ($have -and $have.DisplayVersion -eq $P.T3_VERSION) { "ok t3code $($P.T3_VERSION)"; return }
+  # T3 Code updates itself: the pinned release or anything newer is kept, never downgraded.
+  if ($have -and (Ver-Ge $have.DisplayVersion $P.T3_VERSION)) { "ok t3code $($have.DisplayVersion) (>= $($P.T3_VERSION))"; return }
   $tmp = Join-Path ([IO.Path]::GetTempPath()) ('aj-t3-' + [guid]::NewGuid().ToString('N'))
   New-Item -ItemType Directory -Path $tmp | Out-Null
   try {

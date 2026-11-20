@@ -11,6 +11,17 @@ JSON=0; [ "${1:-}" = "--json" ] && JSON=1
 
 # --selftest: dry check of versions.env on any OS (macOS, Linux; installs and changes nothing):
 # every line parses, every checksum/commit field is well-formed, every pinned URL and tag answers.
+t3_auth_state() { node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{let a;try{a=JSON.parse(s).t3.auth.status}catch{}process.stdout.write(a==="valid"||a==="invalid"?a:"unknown")})' 2>/dev/null || echo unknown; }  # stdin: tentacles doctor --json
+# "T3 is running": match the app's own executable path as a fixed string. pgrep reads the ( ) in the name as a pattern and never matches.
+t3_proc_match() { grep -F -- "/$T3_APP_NAME.app/Contents/MacOS/$T3_APP_NAME" >/dev/null; }  # stdin: ps -A -o comm= (no -q: grep must read all of ps under pipefail)
+t3_running() { ps -A -o comm= 2>/dev/null | t3_proc_match; }
+# Why AJ-TENT-03. Tentacles at the pin prints JSON only when T3 answered; with no token file or T3 not
+# running it prints nothing, so fall back to the local facts.
+tent03_why() { # $1 = t3_auth_state
+  if [ "$1" = invalid ] || [ ! -s "${T3_HERMES_TOKEN_FILE:-$HOME/.local/state/t3-hermes-bridge/t3.token}" ]; then echo "T3 token missing or rejected: bin/install.sh t3-token"
+  elif ! t3_running; then echo "$T3_APP_NAME not running"
+  else echo "see tentacles doctor"; fi
+}
 selftest() {
   local f=0 line k v url want got
   ok() { echo "PASS selftest $*"; }
@@ -40,6 +51,22 @@ selftest() {
   [ -n "$(tagsha "$T3_REPO" "$T3_TAG")" ] && ok "tag $T3_TAG on $T3_REPO" || bad "tag $T3_TAG missing on $T3_REPO"
   got="$(tagsha "$TENTACLES_REPO" "$TENTACLES_TAG")"; [ "$got" = "$TENTACLES_COMMIT" ] && ok "tag $TENTACLES_TAG = $TENTACLES_COMMIT" || bad "tag $TENTACLES_TAG = ${got:-missing}, want $TENTACLES_COMMIT"
   got="$(tagsha "$GUARDIAN_REPO" "$GUARDIAN_TAG")"; want="$GUARDIAN_COMMIT"; [ -n "$got" ] && [ "${got:0:${#want}}" = "$want" ] && ok "tag $GUARDIAN_TAG = $want" || bad "tag $GUARDIAN_TAG = ${got:-missing}, want $want"
+  for c in '{"t3":{"reachable":true,"auth":{"status":"valid"}}}=valid' '{"t3":{"reachable":true,"auth":{"status":"invalid","code":"t3_reauth_required"}}}=invalid' '=unknown' 'not-json=unknown'; do
+    in="${c%=*}"; got="$(printf '%s' "$in" | t3_auth_state)"; [ "$got" = "${c##*=}" ] && ok "t3 auth state ${c##*=} from a ${#in}-byte stdout" || bad "t3 auth state: '$in' gave $got, want ${c##*=}"
+  done
+  tf="$(mktemp)"; got="$(T3_HERMES_TOKEN_FILE="$tf" tent03_why unknown)"   # empty token file, no JSON (new Mac)
+  [ "$got" = "T3 token missing or rejected: bin/install.sh t3-token" ] && ok "AJ-TENT-03 no JSON + no token = token text" || bad "AJ-TENT-03 no JSON + no token gave: $got"
+  echo x > "$tf"; got="$(T3_HERMES_TOKEN_FILE="$tf" T3_APP_NAME="aj-selftest-no-such-app" tent03_why unknown)"; rm -f "$tf"
+  [ "$got" = "aj-selftest-no-such-app not running" ] && ok "AJ-TENT-03 no JSON + token + T3 down = not running" || bad "AJ-TENT-03 no JSON + token + T3 down gave: $got"
+  # process-list lines: the app itself counts as running; its helper alone and a name without ( ) do not
+  for c in "/Applications/$T3_APP_NAME.app/Contents/MacOS/$T3_APP_NAME=0" "/Applications/$T3_APP_NAME.app/Contents/Frameworks/$T3_APP_NAME Helper.app/Contents/MacOS/$T3_APP_NAME Helper=1" "/Applications/T3 Code Beta.app/Contents/MacOS/T3 Code Beta=1"; do
+    if printf '%s\n' "${c%=*}" | t3_proc_match; then got=0; else got=1; fi
+    [ "$got" = "${c##*=}" ] && ok "t3 running match=${c##*=} for ${c%=*}" || bad "t3 running match gave $got for ${c%=*}, want ${c##*=}"
+  done
+  [ "$(grep '^t3_proc_match() ' "$HERE/bin/install.sh")" = "$(grep '^t3_proc_match() ' "$HERE/bin/doctor.sh")" ] && ! grep -q 'pgre[p] -x' "$HERE/bin/install.sh" "$HERE/bin/doctor.sh" && ok "t3 running match: installer and doctor share one fixed-string rule, no pgrep" || bad "t3 running match differs between installer and doctor, or pgrep is back"
+  want='tentacles reauth --t3-bin "$HOME/.t3/bin/t3" --t3-home "$HOME/.t3"'
+  grep -qF -- "$want" "$HERE/REPAIR.md" && grep -q '^T3_CLI="\$HOME/.t3/bin/t3"; T3_HOME_DIR="\$HOME/.t3"$' "$HERE/bin/install.sh" && grep -q 't3-token) do_t3_token' "$HERE/bin/install.sh" \
+    && ok "t3-token step: install.sh target and REPAIR AJ-TENT-03/05 name the same ~/.t3/bin/t3 reauth" || bad "t3-token step: install.sh and REPAIR.md disagree on the reauth command"
   echo "selftest fails: $f"
   [ $f -eq 0 ]
 }
@@ -130,20 +157,31 @@ if [ $XS = 1 ] && [ $SANDBOXED = 0 ]; then
   else rec $XF AJ-CODEX-04 codex-reply "no-OK-in-90s" OK "REPAIR.md AJ-CODEX-04"; fi
   rmdir "$XT" 2>/dev/null
 fi
-# 4 T3 Code (our pinned fork)
+# 4 T3 Code: the official upstream app. It updates itself, so any release from T3_MIN up passes;
+#   newer than the tested T3_VERSION is a WARN (the Tentacles doctor below still decides Local Talk).
 T3="$(app_path "$T3_APP_NAME")"
 if [ -z "$T3" ]; then rec FAIL AJ-T3-01 t3code missing "$T3_VERSION" "$T3_REPO@$T3_TAG"
-else TV="$(plist_ver "$T3")"
-  if pin "$T3_VERSION" t3code && [ "$TV" != "$T3_VERSION" ]; then rec FAIL AJ-T3-02 t3code "$TV" "$T3_VERSION" "$T3_REPO@$T3_TAG"
-  elif [ "$T3_VERSION" != TBD ]; then rec PASS AJ-T3-00 t3code "$TV" "$T3_VERSION" "$T3_REPO@$T3_TAG"; fi
+elif pin "$T3_VERSION" t3code; then TV="$(plist_ver "$T3")"; TID="$(defaults read "$T3/Contents/Info" CFBundleIdentifier 2>/dev/null)"
+  if [ "$TID" != "$T3_BUNDLE_ID" ]; then rec FAIL AJ-T3-08 t3code "bundle ${TID:-unknown}" "$T3_BUNDLE_ID" "REPAIR.md AJ-T3-08"
+  elif ! ge "$TV" "$T3_MIN"; then rec FAIL AJ-T3-02 t3code "$TV" ">=$T3_MIN (tested $T3_VERSION)" "$T3_REPO@$T3_TAG"
+  elif [ "$TV" != "$T3_VERSION" ] && ge "$TV" "$T3_VERSION"; then rec WARN AJ-T3-09 t3code "$TV newer than tested" "$T3_VERSION" "REPAIR.md AJ-T3-09"
+  else rec PASS AJ-T3-00 t3code "$TV" "$T3_MIN..$T3_VERSION" "$T3_REPO@$T3_TAG"; fi
 fi
-# 5 Tentacles
+LEGACY_FOUND=""
+IFS='|' read -r -a LEGACY_NAMES <<< "${T3_LEGACY_APP_NAMES:-}"
+for name in ${LEGACY_NAMES[@]+"${LEGACY_NAMES[@]}"}; do [ -n "$(app_path "$name")" ] && LEGACY_FOUND="${LEGACY_FOUND:+$LEGACY_FOUND, }$name.app"; done
+[ -n "$LEGACY_FOUND" ] && rec WARN AJ-T3-10 t3code-older "older T3 Code app: $LEGACY_FOUND" "only $T3_APP_NAME" "REPAIR.md AJ-T3-10"
+# 5 Tentacles: version pin, then its doctor must report the Local Talk turn-result capability on this T3
 if ! command -v tentacles >/dev/null; then rec FAIL AJ-TENT-01 tentacles missing "$TENTACLES_VERSION" "$TENTACLES_REPO@$TENTACLES_TAG"
 else XV="$(ver tentacles --version)"
   if pin "$TENTACLES_VERSION" tentacles && [ "$XV" != "$TENTACLES_VERSION" ]; then rec FAIL AJ-TENT-02 tentacles "$XV" "$TENTACLES_VERSION" "$TENTACLES_REPO@$TENTACLES_TAG"
   elif [ "$TENTACLES_VERSION" != TBD ]; then
-    if tentacles doctor --json >/dev/null 2>&1; then rec PASS AJ-TENT-00 tentacles "$XV doctor-ok" "$TENTACLES_VERSION" "$TENTACLES_REPO@$TENTACLES_TAG"
-    else rec FAIL AJ-TENT-03 tentacles "$XV doctor-not-ready" "$TENTACLES_VERSION" "$TENTACLES_REPO@$TENTACLES_TAG"; fi
+    if TJ="$(tentacles doctor --json 2>/dev/null)"; then
+      TALK="$(printf '%s' "$TJ" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).capabilities?.talkTurnResult??"none"))}catch{process.stdout.write("unreadable")}})' 2>/dev/null)"
+      if [ "$TALK" = v1 ]; then rec PASS AJ-TENT-00 tentacles "$XV doctor-ok talkTurnResult=v1" "$TENTACLES_VERSION" "$TENTACLES_REPO@$TENTACLES_TAG"
+      else rec FAIL AJ-TENT-04 tentacles "$XV talkTurnResult=${TALK:-none}" "talkTurnResult v1" "REPAIR.md AJ-TENT-04"; fi
+    else TWHY="$(tent03_why "$(printf '%s' "$TJ" | t3_auth_state)")"
+      rec FAIL AJ-TENT-03 tentacles "$XV doctor-not-ready: $TWHY" "$TENTACLES_VERSION" "REPAIR.md AJ-TENT-03"; fi
   fi
 fi
 # 6 estate-guardian: the classifier + router for Tentacles (standard), the guard checkout (optional)
@@ -188,7 +226,7 @@ if [ -z "$GC" ]; then rec FAIL AJ-CHROME-01 google-chrome missing any "google.co
 else rec PASS AJ-CHROME-00 google-chrome "$(plist_ver "$GC")" any google.com/chrome; fi
 # 8 manual checks (inside the Agent Jack app; doctor cannot see them)
 rec SKIP AJ-PAIR-00 pairing manual "Paired · ready" "Settings → Computers & labs"
-rec SKIP AJ-LOCAL-00 local-bot manual "Local reply OK" "Bot → Provider → Local → Codex or Claude Code"
+rec SKIP AJ-LOCAL-00 local-bot manual "Local reply OK" "Bot gear → Engine → Select (Advanced) → Lab Local · Codex or Local · Claude Code → Apply"
 rec SKIP AJ-BROWSER-00 browser "manual (optional)" "extension Connected" "BROWSER.md: Codex → ChatGPT extension (OpenAI); Claude → Claude in Chrome (Anthropic)"
 
 if [ $JSON = 1 ]; then

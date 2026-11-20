@@ -2,7 +2,7 @@
 # Run:  powershell -NoProfile -ExecutionPolicy Bypass -File bin/doctor.ps1 [-Json] [-SelfTest]
 # (-ExecutionPolicy Bypass applies to this one process only; the machine policy is never changed.)
 # Same line format and check ids as bin/doctor.sh; Windows-only ids: AJ-WINGET-*, AJ-SYS-02, AJ-TENTLINK-*.
-# WAIT = waits for the Windows build of T3 Code TPLUS (T3, Tentacles doctor, Local Bot); like WARN it never fails the run.
+# WAIT = waits for a pinned Windows build of T3 Code (T3, Tentacles doctor, Local Bot); like WARN it never fails the run.
 # Exit 0 = all PASS/SKIP/WARN/WAIT, 1 = at least one FAIL. No secrets, e-mails or home paths are printed (home is shown as ~).
 # Windows PowerShell 5.1 syntax only (no &&, ||, ?:, ??); ASCII only, because 5.1 reads BOM-less files as ANSI.
 # Arguments to native programs never contain double quotes: 5.1 drops them (python -c code uses single quotes).
@@ -98,15 +98,18 @@ if ($xs -and -not $sandboxed) {
 }
 Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue
 
-# 4 T3 Code (our pinned fork)
+# 4 T3 Code: the official upstream app. It updates itself, so any release from T3_MIN up passes;
+#   newer than the tested T3_VERSION is a WARN (the Tentacles doctor below still decides Local Talk).
+function Ver-Ge($a, $b) { try { return ([version](("$a" -replace '[-+].*$', ''))) -ge ([version](("$b" -replace '[-+].*$', ''))) } catch { return $false } }
 $t3src = "$($P.T3_REPO)@$($P.T3_TAG)"
 $t3wait = ($P.T3_ASSET_WIN_X64 -eq 'TBD')
-if ($t3wait) { Rec WAIT AJ-PIN-00 t3code "waiting" "Windows build of T3 Code TPLUS" "VERSIONS.md" }
+if ($t3wait) { Rec WAIT AJ-PIN-00 t3code "waiting" "Windows pin of T3 Code not set (proof pending)" "VERSIONS.md" }
 else {
   $t3 = Get-InstalledApp ($P.T3_APP_NAME + '*')
   if (-not $t3) { Rec FAIL AJ-T3-01 t3code missing $P.T3_VERSION $t3src }
-  elseif ($t3.DisplayVersion -ne $P.T3_VERSION) { Rec FAIL AJ-T3-02 t3code $t3.DisplayVersion $P.T3_VERSION $t3src }
-  else { Rec PASS AJ-T3-00 t3code $t3.DisplayVersion $P.T3_VERSION $t3src }
+  elseif (-not (Ver-Ge $t3.DisplayVersion $P.T3_MIN)) { Rec FAIL AJ-T3-02 t3code $t3.DisplayVersion ">=$($P.T3_MIN) (tested $($P.T3_VERSION))" $t3src }
+  elseif ($t3.DisplayVersion -ne $P.T3_VERSION -and (Ver-Ge $t3.DisplayVersion $P.T3_VERSION)) { Rec WARN AJ-T3-09 t3code "$($t3.DisplayVersion) newer than tested" $P.T3_VERSION "REPAIR.md AJ-T3-09" }
+  else { Rec PASS AJ-T3-00 t3code $t3.DisplayVersion "$($P.T3_MIN)..$($P.T3_VERSION)" $t3src }
 }
 # Names only, never values, of what `tentacles doctor --json` reports as not ready (lab:code, t3:code),
 # or a fixed label for a CLI error, so a non-T3 cause stays visible while T3 waits. The error text itself is never printed.
@@ -134,7 +137,9 @@ else {
   if ($tv -ne $P.TENTACLES_VERSION) { Rec FAIL AJ-TENT-02 tentacles $tv $P.TENTACLES_VERSION $tsrc }
   else {
     $td = Invoke-Bounded $tcmd @('doctor', '--json') 60
-    if ($td.Code -eq 0) { Rec PASS AJ-TENT-00 tentacles "$tv doctor-ok" $P.TENTACLES_VERSION $tsrc }
+    $talk = $null; if ($td.Code -eq 0) { try { $talk = ("$($td.Out)" | ConvertFrom-Json).capabilities.talkTurnResult } catch { $talk = $null } }
+    if ($td.Code -eq 0 -and $talk -eq 'v1') { Rec PASS AJ-TENT-00 tentacles "$tv doctor-ok talkTurnResult=v1" $P.TENTACLES_VERSION $tsrc }
+    elseif ($td.Code -eq 0) { Rec FAIL AJ-TENT-04 tentacles "$tv talkTurnResult=$(if ($talk) { $talk } else { 'none' })" 'talkTurnResult v1' 'REPAIR.md AJ-TENT-04' }
     elseif ($t3wait) { Rec WAIT AJ-TENT-03 tentacles "$tv waiting-for-t3; not-ready: $(Tentacles-NotReady $td)" $P.TENTACLES_VERSION $tsrc }
     else { Rec FAIL AJ-TENT-03 tentacles "$tv doctor-not-ready: $(Tentacles-NotReady $td)" $P.TENTACLES_VERSION $tsrc }
   }
@@ -193,8 +198,8 @@ $gc = Get-InstalledApp 'Google Chrome'
 if ($gc) { Rec PASS AJ-CHROME-00 google-chrome $gc.DisplayVersion any google.com/chrome } else { Rec FAIL AJ-CHROME-01 google-chrome missing any "google.com/chrome (REPAIR.md AJ-CHROME-01)" }
 # 8 manual checks (inside the Agent Jack app; doctor cannot see them)
 Rec SKIP AJ-PAIR-00 pairing manual "Paired - ready" "Settings > Computers & labs"
-if ($t3wait) { Rec WAIT AJ-LOCAL-00 local-bot "waiting; Bot runs on Server" "Local reply OK" "needs the Windows build of T3 Code TPLUS" }
-else { Rec SKIP AJ-LOCAL-00 local-bot manual "Local reply OK" "Bot > Provider > Local > Codex or Claude Code" }
+if ($t3wait) { Rec WAIT AJ-LOCAL-00 local-bot "waiting; Bot runs on Server" "Local reply OK" "Windows pin of T3 Code not set (proof pending)" }
+else { Rec SKIP AJ-LOCAL-00 local-bot manual "Local reply OK" "Bot gear > Engine > Select (Advanced) > Lab Local - Codex or Local - Claude Code > Apply" }
 Rec SKIP AJ-BROWSER-00 browser "manual (optional)" "extension Connected" "BROWSER.md: Codex > ChatGPT extension (OpenAI); Claude > Claude in Chrome (Anthropic)"
 
 if ($Json) {

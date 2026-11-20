@@ -28,11 +28,11 @@ Mluv se mnou **česky** (nebo jazykem, kterým ti píšu), jednoduše a krok za 
 3. `node -v` (potřeba v22+), jinak po souhlasu `brew install node`. `git --version`, jinak `xcode-select --install` (potvrdím sám).
 
 ## Krok 2: Stáhni návod v pevné verzi
-Když už jsi návod stáhl při vložení bloku z README a jsi v jeho složce, klonování přeskoč a spusť jen `git checkout v1.1.0`. Jinak po souhlasu:
+Když už jsi návod stáhl při vložení bloku z README a jsi v jeho složce, klonování přeskoč a spusť jen `git checkout v1.1.1`. Jinak po souhlasu:
 ```bash
 mkdir -p ~/Developer && cd ~/Developer
 git clone https://github.com/m-check1B/agent-jack-setup.git
-cd agent-jack-setup && git checkout v1.1.0
+cd agent-jack-setup && git checkout v1.1.1
 ```
 Pak si přečti `AGENTS.md` a od teď se jím řiď.
 
@@ -41,11 +41,12 @@ Spusť `bin/doctor.sh` a lidsky mi shrň, co je PASS a co FAIL.
 
 ## Krok 4: Instalace
 0. **Google Chrome** (povinný): když chybí v Aplikacích, pošli mě na https://www.google.com/chrome. Stáhnu ho a přetáhnu **Google Chrome** do Aplikací sám. (Nebo po mém souhlasu `brew install --cask google-chrome`.)
-1. Po souhlasu `bin/install.sh all`. Nainstaluje Codex CLI, Claude Code CLI, náš T3 Code TPLUS, Tentacles a estate-guardian (klasifikátor + router pro Tentacles) v přesných verzích. (Když chybí Python 3.11+, řiď se `REPAIR.md` AJ-PY-01.) Je bezpečné ho pustit znovu.
-2. Přihlášení dělám já. Doporučeně obě (každé ze svého předplatného), aspoň jedno: `codex login` (otevře se prohlížeč, přihlásím se svým ChatGPT Plus) a `claude auth login` (Claude Pro). Pak otevřu **T3 Code TPLUS** (poprvé pravým tlačítkem → **Otevřít**, aplikace zatím není notarizovaná; nebo Nastavení systému → Soukromí a zabezpečení → Přesto otevřít) a v **Settings → Providers** zkontroluju, že jsou **Codex** a **Claude Code** připravené, ne „not found“ (jinak `REPAIR.md` AJ-T3-06). Když mám zatím jen jedno předplatné, stačí ten jeden.
-3. Volitelně (zeptej se mě): `bin/install.sh guardian` (samotný hlídač estate-guardian, pro pokročilé; jen stažení, trvalé hlídání se nezapíná).
-4. Znovu `bin/doctor.sh`. Každý FAIL oprav podle `REPAIR.md` a ověř dalším doctorem.
-5. **Doporučeno, druhá aplikace:** když instalaci řídí Codex, nainstaluji si i aplikaci Claude z https://claude.com/download (předplatné Claude Pro); když ji řídí Claude Code, nainstaluji si i aplikaci Codex z https://openai.com/codex → **Download for macOS** (ChatGPT Plus). Přihlásím se v ní i v Terminálu (bod 2). Doctor pak ukáže AJ-CLAUDE-00 a AJ-CODEX-00 místo WARN.
+1. Po souhlasu `bin/install.sh all`. Nainstaluje Codex CLI, Claude Code CLI, **T3 Code (Beta)** (oficiální aplikace z github.com/pingdotgg/t3code, v Aplikacích jako „T3 Code (Beta)“), Tentacles a estate-guardian (klasifikátor + router pro Tentacles) v přesných verzích. Když už na Macu je starší aplikace T3 Code, instalátor ji po instalaci nové přesune do `~/.agent-jack/replaced-apps` (nic nemaže; vlákna a nastavení ve složce `~/.t3` zůstanou a nová aplikace je převezme). (Když chybí Python 3.11+, řiď se `REPAIR.md` AJ-PY-01.) Je bezpečné ho pustit znovu.
+2. Přihlášení dělám já. Doporučeně obě (každé ze svého předplatného), aspoň jedno: `codex login` (otevře se prohlížeč, přihlásím se svým ChatGPT Plus) a `claude auth login` (Claude Pro). Pak otevřu **T3 Code (Beta)** z Aplikací (když se macOS zeptá, jestli otevřít aplikaci staženou z internetu, potvrdím **Otevřít**; když ji otevřít nejde, `REPAIR.md` AJ-T3-05) a v **Settings → Providers** zkontroluju, že jsou **Codex** a **Claude Code** připravené, ne „not found“ (jinak `REPAIR.md` AJ-T3-06). Když mám zatím jen jedno předplatné, stačí ten jeden.
+3. Když je **T3 Code (Beta)** otevřený, po mém souhlasu `bin/install.sh t3-token`. Vydá Tentacles přístup k T3 Code (Beta) příkazem `tentacles reauth --t3-bin "$HOME/.t3/bin/t3" --t3-home "$HOME/.t3"`; token nikdy nevypisuje a je bezpečné ho pustit znovu. Na novém Macu (nebo s novou složkou `~/.t3`) je to nutné, jinak doctor ukáže AJ-TENT-03 „T3 token missing or rejected“. Když skončí FAIL AJ-TENT-05, řiď se `REPAIR.md`.
+4. Volitelně (zeptej se mě): `bin/install.sh guardian` (samotný hlídač estate-guardian, pro pokročilé; jen stažení, trvalé hlídání se nezapíná).
+5. Znovu `bin/doctor.sh`. Každý FAIL oprav podle `REPAIR.md` a ověř dalším doctorem.
+6. **Doporučeno, druhá aplikace:** když instalaci řídí Codex, nainstaluji si i aplikaci Claude z https://claude.com/download (předplatné Claude Pro); když ji řídí Claude Code, nainstaluji si i aplikaci Codex z https://openai.com/codex → **Download for macOS** (ChatGPT Plus). Přihlásím se v ní i v Terminálu (bod 2). Doctor pak ukáže AJ-CLAUDE-00 a AJ-CODEX-00 místo WARN.
 
 ## Krok 5: Aplikace Agent Jack
 1. V prohlížeči se přihlásím na https://agentjack.kraliki.com/app (**Google**, nebo e-mail a heslo, pokud jsem je dostal) a otevřu https://agentjack.kraliki.com/downloads
@@ -53,8 +54,8 @@ Spusť `bin/doctor.sh` a lidsky mi shrň, co je PASS a co FAIL.
 3. Přetáhnu **Agent Jack** do Aplikací. Aplikace pro Mac je **podepsaná a notarizovaná**, otevře se bez varování. (Kdyby macOS přesto hlásil „nelze ověřit vývojáře“, zastav se: soubor není od nás. Smaž ho po mém souhlasu a stáhni znovu z /downloads.) Spustím aplikaci a přihlásím se stejně jako na webu.
 
 ## Krok 6: Spárování a Bot na Local
-1. V aplikaci **Settings → Computers & labs** → **Pair this Mac … so agents can use its labs** (souhlas potvrdím sám). Cíl: **Paired · ready**.
-2. **V aplikaci** otevřu Bota → ozubené kolečko → **Provider** → **Local** → **Codex** (s ChatGPT Plus) nebo **Claude Code** (s Claude Pro) → **Start new session** → napíšu „Ahoj, odpověz jen slovem OK.“ Pokud mám obojí, vyzkouším obojí.
+1. V aplikaci **Settings → Computers & labs** → **Pair this Mac (…) so agents can use its labs** (v závorce je jméno Macu; souhlas potvrdím sám). Cíl: **Paired · ready** nebo **Connected**.
+2. **V aplikaci** otevřu Bota → ozubené kolečko → **Engine** → **Select (Advanced)** → **Lab**: volba začínající **Local · Codex** (s ChatGPT Plus) nebo **Local · Claude Code** (s Claude Pro) → **Model**: nechám nabízený → **Apply** → napíšu „Ahoj, odpověz jen slovem OK.“ Ověření: pod odpovědí je **Ran on Local · …**. Pokud mám obojí, vyzkouším obojí. Když pod kolečkem volba **Engine / Lab** není, tento účet si lab vybrat nemůže: zapiš do reportu „Local Bot: no Lab picker“ (není to chyba Macu).
 
 ## Krok 6b (volitelné): Rozšíření do Chrome
 Zeptej se mě, jestli chci, aby agenti pracovali i v mém Chrome. Pokud ano, proveď mě [BROWSER.md](BROWSER.md):
@@ -68,7 +69,7 @@ Spusť `bin/doctor.sh` naposledy. Do výstupu doplň ruční řádky: párován�
 ## Krok 8 (volitelné): T3 Code na mobilu nebo iPadu
 Zeptej se mě, jestli chci ovládat agenty i z mobilu. Pokud ano:
 1. Na telefon nebo iPad si sám nainstaluji aplikaci **T3 Code** (vydavatel T3 Tools, zdarma): iPhone/iPad https://apps.apple.com/us/app/t3-code-remote-claude-more/id6787819824 (iOS/iPadOS 18+), Android https://play.google.com/store/apps/details?id=com.t3tools.t3code
-2. Aplikace se k počítači připojuje párovacím kódem. Párování s naší verzí **T3 Code TPLUS zatím není ověřené**: pokud T3 Code TPLUS na Macu párovací kód nabídne, proveď mě tím. Pokud ne nebo se spojení nenaváže, krok přeskoč. Výsledek (mobil: spárováno / neověřeno) připiš jako řádek na konec DOCTOR reportu z kroku 7. Kvůli tomu neinstaluj Tailscale ani jinou VPN a neotevírej porty.
+2. Aplikace se k počítači připojuje párovacím kódem. Párování s **T3 Code (Beta) jsme zatím neověřili**: pokud T3 Code (Beta) na Macu párovací kód nabídne, proveď mě tím. Pokud ne nebo se spojení nenaváže, krok přeskoč. Výsledek (mobil: spárováno / neověřeno) připiš jako řádek na konec DOCTOR reportu z kroku 7. Kvůli tomu neinstaluj Tailscale ani jinou VPN a neotevírej porty.
 
 Na úplný konec mi nabídni volitelné doporučené nástroje z README (Linear, GitHub + `gh`, Thunderbird) a nainstaluj je jen, když řeknu ano, a jen z jejich oficiálních zdrojů.
 
