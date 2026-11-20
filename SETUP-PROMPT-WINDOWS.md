@@ -43,11 +43,11 @@ Mluv se mnou **česky** (nebo jazykem, kterým ti píšu), jednoduše a krok za 
 5. Po každé instalaci dej řádek PATH z pravidel do **téhož** příkazu jako kontrolu (např. `<řádek>; node -v; git --version; py -3.12 --version`). Ověření: všechny vypíšou verzi; spolehlivě to potvrdí doctor v kroku 4 (AJ-NODE-00, AJ-GIT-00).
 
 ## Krok 3: Stáhni návod v pevné verzi
-Když už jsi návod stáhl při vložení bloku z README a jsi v jeho složce, klonování přeskoč a spusť jen `git checkout v1.1.1`. Jinak po souhlasu:
+Když už jsi návod stáhl při vložení bloku z README a jsi v jeho složce, klonování přeskoč a spusť jen `git checkout v1.1.2`. Jinak po souhlasu:
 ```powershell
 New-Item -ItemType Directory -Force -Path "$HOME\Developer" | Out-Null; Set-Location "$HOME\Developer"
 git clone https://github.com/m-check1B/agent-jack-setup.git
-Set-Location agent-jack-setup; git checkout v1.1.1
+Set-Location agent-jack-setup; git checkout v1.1.2
 ```
 Pak si přečti `AGENTS.md` a od teď se jím řiď.
 

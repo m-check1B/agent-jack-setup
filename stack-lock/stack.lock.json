@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "revision": 4,
+  "updated": "2026-11-20",
+  "ticket": "KRA-10845",
+  "doc": "agent-jack-3 docs/LOCAL-STACK.md",
+  "changeSet": "setup v1.1.2: managed Tentacles v0.5.0-jack.18 (signs in to T3 Code (Beta) by itself on first run); the guide checks out setup v1.1.2",
+  "tentacles": {
+    "tag": "v0.5.0-jack.16",
+    "version": "0.5.0-jack.16",
+    "commit": "29b8e7ded2e86c322f8e6ffb721d27f04f09790f",
+    "t3Contract": "talkTurnResult/v1"
+  },
+  "managedTentacles": {
+    "tag": "v0.5.0-jack.18",
+    "version": "0.5.0-jack.18",
+    "commit": "8cafda132a8260a3d264a1cedd594d92fa146933"
+  },
+  "t3": {
+    "publisherRepo": "https://github.com/pingdotgg/t3code",
+    "tag": "v0.1.11",
+    "minimum": "0.1.8",
+    "testedThrough": "0.1.11"
+  },
+  "agentJackSetup": {
+    "tag": "v1.1.2",
+    "desktopMin": "3.17.68"
+  },
+  "onboarding": {
+    "guide": "agent-jack/AGENTS.md",
+    "revision": "ebe1490043f52625bdac07535a7d09fe533e958a",
+    "desktopVersion": "3.17.68"
+  },
+  "flySandbox": {
+    "tentacles": "desktop/resources/tentacles",
+    "t3": "build arg; moves to stock T3 under KRA-10845"
+  }
+}

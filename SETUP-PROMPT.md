@@ -28,11 +28,11 @@ Mluv se mnou **česky** (nebo jazykem, kterým ti píšu), jednoduše a krok za 
 3. `node -v` (potřeba v22+), jinak po souhlasu `brew install node`. `git --version`, jinak `xcode-select --install` (potvrdím sám).
 
 ## Krok 2: Stáhni návod v pevné verzi
-Když už jsi návod stáhl při vložení bloku z README a jsi v jeho složce, klonování přeskoč a spusť jen `git checkout v1.1.1`. Jinak po souhlasu:
+Když už jsi návod stáhl při vložení bloku z README a jsi v jeho složce, klonování přeskoč a spusť jen `git checkout v1.1.2`. Jinak po souhlasu:
 ```bash
 mkdir -p ~/Developer && cd ~/Developer
 git clone https://github.com/m-check1B/agent-jack-setup.git
-cd agent-jack-setup && git checkout v1.1.1
+cd agent-jack-setup && git checkout v1.1.2
 ```
 Pak si přečti `AGENTS.md` a od teď se jím řiď.
 

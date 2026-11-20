@@ -15,13 +15,16 @@ t3_auth_state() { node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()
 # "T3 is running": match the app's own executable path as a fixed string. pgrep reads the ( ) in the name as a pattern and never matches.
 t3_proc_match() { grep -F -- "/$T3_APP_NAME.app/Contents/MacOS/$T3_APP_NAME" >/dev/null; }  # stdin: ps -A -o comm= (no -q: grep must read all of ps under pipefail)
 t3_running() { ps -A -o comm= 2>/dev/null | t3_proc_match; }
-# Why AJ-TENT-03. Tentacles at the pin prints JSON only when T3 answered; with no token file or T3 not
-# running it prints nothing, so fall back to the local facts.
+# Why AJ-TENT-03. Tentacles before jack.18 printed nothing with no token file or T3 not running; jack.18
+# prints JSON (t3.reachable=false, auth not known). Either way fall back to the local facts.
 tent03_why() { # $1 = t3_auth_state
   if [ "$1" = invalid ] || [ ! -s "${T3_HERMES_TOKEN_FILE:-$HOME/.local/state/t3-hermes-bridge/t3.token}" ]; then echo "T3 token missing or rejected: bin/install.sh t3-token"
   elif ! t3_running; then echo "$T3_APP_NAME not running"
   else echo "see tentacles doctor"; fi
 }
+# First bundle found: each name in order, /Applications before ~/Applications.
+APP_DIRS=(/Applications "$HOME/Applications")
+app_path() { local n d; for n in "$@"; do for d in "${APP_DIRS[@]}"; do [ -d "$d/$n.app" ] && { echo "$d/$n.app"; return; }; done; done; }
 selftest() {
   local f=0 line k v url want got
   ok() { echo "PASS selftest $*"; }
@@ -67,6 +70,13 @@ selftest() {
   want='tentacles reauth --t3-bin "$HOME/.t3/bin/t3" --t3-home "$HOME/.t3"'
   grep -qF -- "$want" "$HERE/REPAIR.md" && grep -q '^T3_CLI="\$HOME/.t3/bin/t3"; T3_HOME_DIR="\$HOME/.t3"$' "$HERE/bin/install.sh" && grep -q 't3-token) do_t3_token' "$HERE/bin/install.sh" \
     && ok "t3-token step: install.sh target and REPAIR AJ-TENT-03/05 name the same ~/.t3/bin/t3 reauth" || bad "t3-token step: install.sh and REPAIR.md disagree on the reauth command"
+  # AJ-JACK: the disk image ships "Agent Jack.app"; older installs are "AgentJack.app" in ~/Applications
+  td="$(mktemp -d)"; APP_DIRS=("$td/sys" "$td/home"); mkdir -p "$td/home/AgentJack.app"
+  [ "$(app_path 'Agent Jack' AgentJack)" = "$td/home/AgentJack.app" ] && ok "AJ-JACK finds ~/Applications/AgentJack.app" || bad "AJ-JACK misses ~/Applications/AgentJack.app"
+  mkdir -p "$td/home/Agent Jack.app"
+  [ "$(app_path 'Agent Jack' AgentJack)" = "$td/home/Agent Jack.app" ] && ok "AJ-JACK prefers Agent Jack.app over AgentJack.app" || bad "AJ-JACK does not prefer Agent Jack.app"
+  rm -rf "$td/home"; [ -z "$(app_path 'Agent Jack' AgentJack)" ] && ok "AJ-JACK reports missing with no bundle" || bad "AJ-JACK found a bundle in an empty folder"
+  rm -rf "$td"; APP_DIRS=(/Applications "$HOME/Applications")
   echo "selftest fails: $f"
   [ $f -eq 0 ]
 }
@@ -78,7 +88,6 @@ rec() { # status code component found expected source
 }
 ver() { "$@" 2>/dev/null | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+[-A-Za-z0-9.]*' | head -1; }
 plist_ver() { defaults read "$1/Contents/Info" CFBundleShortVersionString 2>/dev/null; }
-app_path() { for d in /Applications "$HOME/Applications"; do [ -d "$d/$1.app" ] && { echo "$d/$1.app"; return; }; done; }
 ge() { [ "$(printf '%s\n%s\n' "$2" "$1" | sort -V | head -1)" = "$2" ]; }  # $1 >= $2
 pin() { [ "$1" = TBD ] && { rec FAIL AJ-PIN-00 "$2" - "pin not published yet" VERSIONS.md; return 1; }; return 0; }
 
@@ -214,7 +223,7 @@ else GV="$(git -C "$EG" describe --tags --exact-match 2>/dev/null || echo untagg
   else rec PASS AJ-EG-00 guard-checkout "$GV" "$GUARDIAN_TAG" "$GUARDIAN_REPO (optional)"; fi
 fi
 # 7 Agent Jack desktop
-AJ="$(app_path 'Agent Jack')"
+AJ="$(app_path 'Agent Jack' AgentJack)"
 if [ -z "$AJ" ]; then rec FAIL AJ-JACK-01 agent-jack-app missing ">=$JACK_DESKTOP_MIN" "agentjack.kraliki.com/downloads (signed in)"
 else JV="$(plist_ver "$AJ")"
   if ge "$JV" "$JACK_DESKTOP_MIN"; then rec PASS AJ-JACK-00 agent-jack-app "$JV" ">=$JACK_DESKTOP_MIN" "agentjack.kraliki.com/downloads (signed in)"

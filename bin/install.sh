@@ -93,8 +93,9 @@ do_tentacles() {
   if [ "$onpath" != "$have" ]; then echo "note: \`tentacles\` on PATH is ${onpath:-missing} at $(command -v tentacles | sed "s#^$HOME#~#"), not this checkout (REPAIR.md AJ-TENT-02)"; fi
 }
 
-# Stock T3 Code (Beta) writes its CLI to ~/.t3/bin/t3 when it first opens; Tentacles 0.5.0-jack.17 does not
-# look there, so issue Tentacles' T3 session token with it. Idempotent; the token is never printed.
+# Stock T3 Code (Beta) writes its CLI to ~/.t3/bin/t3 when it first opens. Tentacles 0.5.0-jack.18 finds it
+# and signs in on first run by itself; this step stays so the install ends signed in and checked, with the
+# same messages. Idempotent; the token is never printed.
 T3_CLI="$HOME/.t3/bin/t3"; T3_HOME_DIR="$HOME/.t3"
 # "T3 is running": match the app's own executable path as a fixed string. pgrep reads the ( ) in the name as a pattern and never matches.
 t3_proc_match() { grep -F -- "/$T3_APP_NAME.app/Contents/MacOS/$T3_APP_NAME" >/dev/null; }  # stdin: ps -A -o comm= (no -q: grep must read all of ps under pipefail)
