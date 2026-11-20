@@ -8,7 +8,7 @@ Mluv se mnou **česky** (nebo jazykem, kterým ti píšu), jednoduše a krok za 
 
 ## Pravidla (vždy)
 - **Pravidlo č. 1 platí vždy.** Instaluj **přesně ty verze**, které stojí v `versions.env`. Nikdy „latest“.
-- **Nikdy nezadávej, nečti, neukládej ani nikam nenahrávej moje hesla, kódy, tokeny ani API klíče.** Přihlášení a hesla zadávám vždy sám.
+- **Nikdy po mně nechtěj, nezadávej, nečti, neukládej ani nikam nenahrávej moje hesla, kódy, tokeny ani API klíče.** U přihlášení otevři stránku nebo příkaz a počkej, až to dokončím sám.
 - **Nepřepínej na dražší model** ani na vyšší úroveň přemýšlení.
 - **Při chybě se zastav.** Najdi její FAIL kód v `REPAIR.md`. Pokud tam oprava není nebo nepomohla, neimprovizuj: vypiš DOCTOR report a skonči.
 - **Bez potvrzené zálohy (krok 0) nic neinstaluj.**
@@ -28,11 +28,11 @@ Mluv se mnou **česky** (nebo jazykem, kterým ti píšu), jednoduše a krok za 
 3. `node -v` (potřeba v22+), jinak po souhlasu `brew install node`. `git --version`, jinak `xcode-select --install` (potvrdím sám).
 
 ## Krok 2: Stáhni návod v pevné verzi
-Po souhlasu:
+Když už jsi návod stáhl při vložení bloku z README a jsi v jeho složce, klonování přeskoč a spusť jen `git checkout v1.1.0`. Jinak po souhlasu:
 ```bash
 mkdir -p ~/Developer && cd ~/Developer
 git clone https://github.com/m-check1B/agent-jack-setup.git
-cd agent-jack-setup && git checkout v1.0.5
+cd agent-jack-setup && git checkout v1.1.0
 ```
 Pak si přečti `AGENTS.md` a od teď se jím řiď.
 
@@ -49,8 +49,8 @@ Spusť `bin/doctor.sh` a lidsky mi shrň, co je PASS a co FAIL.
 
 ## Krok 5: Aplikace Agent Jack
 1. V prohlížeči se přihlásím na https://agentjack.kraliki.com/app (**Google**, nebo e-mail a heslo, pokud jsem je dostal) a otevřu https://agentjack.kraliki.com/downloads
-2. Vyberu **macOS · Apple Silicon / ARM64 · dmg** (Intel: **macOS · x64 · dmg**) → **Stáhnout**. Ověř `shasum -a 256` nejnovějšího `AgentJack-*.dmg` v `~/Downloads` proti hodnotě na stránce (když je souborů víc, zeptej se mě).
-3. Přetáhnu **Agent Jack** do Aplikací. Hlášku „nelze ověřit vývojáře“ řeším v **Nastavení systému → Soukromí a zabezpečení → Přesto otevřít**. Spustím aplikaci a přihlásím se stejně jako na webu.
+2. Vyberu **macOS · Apple Silicon / ARM64 · dmg** (Intel: **macOS · x64 · dmg**) → **Stáhnout**. Ověř `shasum -a 256` nejnovějšího `AgentJack-*.dmg` v `~/Downloads` proti hodnotě na stránce (když je souborů víc, zeptej se mě). Instalátor se stahuje **jen** v přihlášené webové aplikaci, nikdy z GitHubu.
+3. Přetáhnu **Agent Jack** do Aplikací. Aplikace pro Mac je **podepsaná a notarizovaná**, otevře se bez varování. (Kdyby macOS přesto hlásil „nelze ověřit vývojáře“, zastav se: soubor není od nás. Smaž ho po mém souhlasu a stáhni znovu z /downloads.) Spustím aplikaci a přihlásím se stejně jako na webu.
 
 ## Krok 6: Spárování a Bot na Local
 1. V aplikaci **Settings → Computers & labs** → **Pair this Mac … so agents can use its labs** (souhlas potvrdím sám). Cíl: **Paired · ready**.
@@ -63,7 +63,7 @@ Zeptej se mě, jestli chci, aby agenti pracovali i v mém Chrome. Pokud ano, pro
 Jiná rozšíření s podobným názvem neinstaluj.
 
 ## Krok 7: DOCTOR report
-Spusť `bin/doctor.sh` naposledy. Do výstupu doplň ruční řádky: párování (stav) a Local Bot (který: Codex/Claude Code, odpověděl ano/ne). Pak mi řekni, ať celý blok zkopíruju do odpovědi na uvítací e-mail. Ve výstupu nesmí být hesla, klíče, e-maily ani cesty s mým jménem (domovská složka = `~`).
+Spusť `bin/doctor.sh` naposledy. Do výstupu doplň ruční řádky: párování (stav) a Local Bot (který: Codex/Claude Code, odpověděl ano/ne). Pak mi napiš **srozumitelné shrnutí**: co funguje, co ne, a kroky, které můžu udělat jen já (přihlášení, kódy 2FA, systémová okna s oprávněním, platby). Řekni mi, ať celý blok zkopíruju do odpovědi na uvítací e-mail. Ve výstupu nesmí být hesla, klíče, e-maily ani cesty s mým jménem (domovská složka = `~`).
 
 ## Krok 8 (volitelné): T3 Code na mobilu nebo iPadu
 Zeptej se mě, jestli chci ovládat agenty i z mobilu. Pokud ano:

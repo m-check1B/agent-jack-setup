@@ -58,6 +58,7 @@ do_tentacles() {
   [ -d "$DEV/t3-code-tentacles/.git" ] || git clone -q "$TENTACLES_REPO.git" "$DEV/t3-code-tentacles"
   git -C "$DEV/t3-code-tentacles" fetch -q --tags origin
   git -C "$DEV/t3-code-tentacles" -c advice.detachedHead=false checkout -q "$TENTACLES_TAG"
+  [ "$(git -C "$DEV/t3-code-tentacles" rev-parse HEAD)" = "$TENTACLES_COMMIT" ] || die AJ-TENT-02 "checkout is not the pinned commit $TENTACLES_COMMIT"
   echo "tentacles: npm install + link (can take several minutes)…"
   (cd "$DEV/t3-code-tentacles" && npm install --no-audit --no-fund --loglevel=error && npm link --loglevel=error) || die AJ-TENT-01 "npm install/link failed (EACCES: REPAIR.md AJ-NPM-01)"
   echo "ok tentacles $(ver command tentacles --version || echo '?') @ $TENTACLES_TAG"

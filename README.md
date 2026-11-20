@@ -10,6 +10,81 @@
 
 Tento repozitář obsahuje vše, co k nastavení potřebujete. Všechny nástroje v něm pocházejí z veřejných zdrojů.
 
+### Nejrychlejší cesta: vložte to svému AI
+Používáte už Codex, Claude Code nebo jiného AI agenta? Nejdřív si zálohujte data (bod 0) a přihlaste se na webu (bod 1). Pak zkopírujte **jeden** blok podle svého asistenta, vložte ho tam a odešlete. Agent si stáhne tento návod v pevné verzi, zjistí váš systém, nainstaluje a zkontroluje vše potřebné, opraví, co nejde, a na konci vám napíše, co funguje a co musíte udělat sami (přihlášení, kódy 2FA, systémová okna s oprávněním, platby). Hesla ani kódy po vás chtít nesmí.
+
+**Codex (aplikace Codex nebo `codex` v terminálu)**
+```text
+Nastav mi na tomto počítači Agent Jacka. Jsi Codex.
+Pracuj ve složce ~/Developer, oprávnění nech na „Ask for approval“, nikdy Full access.
+Před každou instalací, stažením nebo změnou se mě zeptej; síťové příkazy jen s mým schválením.
+1. Stáhni návod v pevné verzi a nic odjinud (do složky ~/Developer, vytvoř ji).
+   Chybí git? macOS: xcode-select --install (okno potvrdím já). Windows: winget install --id Git.Git -e
+   --source winget --scope user, pak tento řádek dej na začátek TÉHOŽ příkazu v PowerShellu jako klonování
+   (každý příkaz je nový proces; když to pořád nejde, požádej mě o restart této aplikace):
+   $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
+   git clone https://github.com/m-check1B/agent-jack-setup.git
+   cd agent-jack-setup ; git checkout v1.1.0
+2. Přečti si AGENTS.md a řiď se jeho pravidly.
+3. Zjisti můj operační systém. macOS: postupuj podle SETUP-PROMPT.md.
+   Windows 11: podle SETUP-PROMPT-WINDOWS.md. Jiný systém: zastav se a řekni mi to.
+4. Spusť doctor. macOS: bin/doctor.sh. Windows:
+   powershell -NoProfile -ExecutionPolicy Bypass -File bin/doctor.ps1
+5. Každý FAIL oprav podle REPAIR.md a doctor spusť znovu. Když REPAIR.md opravu nemá, zastav se.
+6. Nikdy po mně nechtěj, nezadávej ani neukládej hesla, klíče ani kódy. U přihlášení otevři
+   stránku nebo příkaz a počkej, až to dokončím.
+7. Skonči srozumitelným shrnutím: co funguje, co ne, a kroky, které můžu udělat jen já
+   (přihlášení, kódy 2FA, systémová okna s oprávněním, platby). Pod něj poslední výstup doctoru.
+```
+
+**Claude Code (aplikace Claude → záložka Code, nebo `claude` v terminálu)**
+```text
+Nastav mi na tomto počítači Agent Jacka. Jsi Claude Code.
+Zůstaň na modelu Sonnet, úroveň přemýšlení high; dražší model nepoužívej.
+Před každou instalací, stažením nebo změnou se mě zeptej.
+1. Stáhni návod v pevné verzi a nic odjinud (do složky ~/Developer, vytvoř ji).
+   Chybí git? macOS: xcode-select --install (okno potvrdím já). Windows: winget install --id Git.Git -e
+   --source winget --scope user, pak tento řádek dej na začátek TÉHOŽ příkazu v PowerShellu jako klonování
+   (každý příkaz je nový proces; když to pořád nejde, požádej mě o restart této aplikace):
+   $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
+   git clone https://github.com/m-check1B/agent-jack-setup.git
+   cd agent-jack-setup ; git checkout v1.1.0
+2. Přečti si AGENTS.md a řiď se jeho pravidly.
+3. Zjisti můj operační systém. macOS: postupuj podle SETUP-PROMPT.md.
+   Windows 11: podle SETUP-PROMPT-WINDOWS.md. Jiný systém: zastav se a řekni mi to.
+4. Spusť doctor. macOS: bin/doctor.sh. Windows:
+   powershell -NoProfile -ExecutionPolicy Bypass -File bin/doctor.ps1
+5. Každý FAIL oprav podle REPAIR.md a doctor spusť znovu. Když REPAIR.md opravu nemá, zastav se.
+6. Nikdy po mně nechtěj, nezadávej ani neukládej hesla, klíče ani kódy. U přihlášení otevři
+   stránku nebo příkaz a počkej, až to dokončím.
+7. Skonči srozumitelným shrnutím: co funguje, co ne, a kroky, které můžu udělat jen já
+   (přihlášení, kódy 2FA, systémová okna s oprávněním, platby). Pod něj poslední výstup doctoru.
+```
+
+**Jiný AI agent (Cursor, Gemini CLI, …), který umí spouštět příkazy v terminálu**
+```text
+Nastav mi na tomto počítači Agent Jacka. Spouštíš příkazy v terminálu.
+Nepřepínej na dražší model.
+Před každou instalací, stažením nebo změnou se mě zeptej.
+1. Stáhni návod v pevné verzi a nic odjinud (do složky ~/Developer, vytvoř ji).
+   Chybí git? macOS: xcode-select --install (okno potvrdím já). Windows: winget install --id Git.Git -e
+   --source winget --scope user, pak tento řádek dej na začátek TÉHOŽ příkazu v PowerShellu jako klonování
+   (každý příkaz je nový proces; když to pořád nejde, požádej mě o restart této aplikace):
+   $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
+   git clone https://github.com/m-check1B/agent-jack-setup.git
+   cd agent-jack-setup ; git checkout v1.1.0
+2. Přečti si AGENTS.md a řiď se jeho pravidly.
+3. Zjisti můj operační systém. macOS: postupuj podle SETUP-PROMPT.md.
+   Windows 11: podle SETUP-PROMPT-WINDOWS.md. Jiný systém: zastav se a řekni mi to.
+4. Spusť doctor. macOS: bin/doctor.sh. Windows:
+   powershell -NoProfile -ExecutionPolicy Bypass -File bin/doctor.ps1
+5. Každý FAIL oprav podle REPAIR.md a doctor spusť znovu. Když REPAIR.md opravu nemá, zastav se.
+6. Nikdy po mně nechtěj, nezadávej ani neukládej hesla, klíče ani kódy. U přihlášení otevři
+   stránku nebo příkaz a počkej, až to dokončím.
+7. Skonči srozumitelným shrnutím: co funguje, co ne, a kroky, které můžu udělat jen já
+   (přihlášení, kódy 2FA, systémová okna s oprávněním, platby). Pod něj poslední výstup doctoru.
+```
+
 ### 0. Nejdřív záloha a místo na disku
 **Než pustíte AI na svůj počítač, zálohujte si data** (Time Machine / Historie souborů / kopie důležitých složek mimo počítač). Doporučujeme agentům dát samostatný uživatelský účet nebo aspoň samostatnou složku (např. `~/Developer`). Před prvním spuštěním: **záloha + dost místa na disku** (viz níže).
 
@@ -24,6 +99,18 @@ Mac s čipem **Apple M3 nebo novějším**, **16 GB RAM** a **disk 512 GB**. Na 
 - **Další krok pro firmu:** vlastní hlavní linuxový server a k němu další koncová zařízení stejného typu.
 - **Mac má přednost před Windows** a **notebook (MacBook) před Macem mini**, protože ho máte stále s sebou.
 - **Mobil:** aplikace Agent Jack pro iPhone a CarPlay je v testování, spuštění plánujeme do 1. prosince 2026.
+
+### Co dnes dostanete na Macu a na Windows
+| | Mac | Windows 11 |
+|---|---|---|
+| Aplikace Agent Jack | **podepsaná a notarizovaná** (Apple), otevře se bez varování | instalátor je zatím **nepodepsaný**, proto Windows ukáže SmartScreen „Systém Windows ochránil váš počítač“: klikněte na **Další informace** → zkontrolujte název `AgentJack-Setup-…exe` → **Přesto spustit**. **Předtím** ověřte otisk: `Get-FileHash -Algorithm SHA256 "$HOME\Downloads\AgentJack-Setup-<verze>.exe"` se musí shodovat s hodnotou SHA-256 na stránce stažení |
+| Kde ji stáhnout | **jen** v přihlášené webové aplikaci, https://agentjack.kraliki.com/downloads; nikdy z GitHubu | stejně |
+| S čím začnete | aplikace Agent Jack + Bot na Local i na našem serveru | aplikace **Agent Jack**, přihlášená, s Botem na **našem serveru** (Provider → Server) |
+| Bot na Local (na vašem počítači) | ano (Codex a Claude Code v T3 Code TPLUS) | **čeká na Windows verzi T3 Code TPLUS**; do té doby Bot běží na našem serveru a doctor ukazuje WAIT (ne FAIL) |
+| T3 Code TPLUS | vydaný (zatím není notarizovaný: poprvé pravým tlačítkem → **Otevřít**) | Windows verze **zatím nevyšla**; doctor ukazuje WAIT AJ-PIN-00 |
+| Tentacles | ano | ano (pevný tag, propojený přes `npm link`, aby ho aplikace našla); připravený až s T3 Code TPLUS (do té doby WAIT AJ-TENT-03) |
+| Codex CLI, Claude Code CLI, estate-classify, Chrome | ano | ano |
+| Stav návodu | ověřená cesta | ověřovací běh naplánovaný; ověřeno dne: _<doplní se>_ |
 
 ### 1. Přihlášení do Agent Jacka (stačí prohlížeč)
 1. Otevřete https://agentjack.kraliki.com/app
@@ -58,25 +145,25 @@ Instalaci řídí **jedna** z obou aplikací, kterákoli. Když máte zatím jen
 
 **Postup:**
 1. Kupte si obě předplatná (nebo zatím jedno), nainstalujte aplikace Codex a Claude a přihlaste se.
-2. Otevřete návod pro svůj systém, zkopírujte **celý** text, vložte ho do jedné z aplikací (Codex nebo Claude Code) a odešlete:
+2. Vložte jeden z bloků výše (nejrychlejší cesta), nebo otevřete návod pro svůj systém, zkopírujte **celý** text, vložte ho do jedné z aplikací (Codex nebo Claude Code) a odešlete:
    - **Mac (ověřená cesta):** [SETUP-PROMPT.md](SETUP-PROMPT.md)
-   - **Windows (zatím neověřeno):** [SETUP-PROMPT-WINDOWS.md](SETUP-PROMPT-WINDOWS.md)
+   - **Windows 11 (ověřovací běh naplánovaný; Bot zatím na našem serveru):** [SETUP-PROMPT-WINDOWS.md](SETUP-PROMPT-WINDOWS.md)
 3. Agent vás provede krok za krokem, před každou změnou se zeptá a každý krok sám ověří. Hesla a přihlášení zadáváte vždy sami.
 4. Na konci vypíše **DOCTOR report**. Zkopírujte ho do odpovědi na uvítací e-mail. Tak uvidíme, co funguje, aniž bychom potřebovali přístup k vašemu počítači.
 5. Volitelně: aplikace **T3 Code** na mobil nebo iPad (návod krok 8). Párování s naší verzí T3 Code TPLUS zatím **není ověřené**.
 
 **Pevné verze:** instalujeme přesně tu kombinaci, kterou jsme sami otestovali ([VERSIONS.md](VERSIONS.md)). Nic se samo neaktualizuje; novou verzi vydáme jako nový tag tohoto repozitáře.
 
-**Oprava:** když něco přestane fungovat, otevřete Codex nebo Claude Code a napište: „oprav mi nastavení Agent Jacka podle github.com/m-check1B/agent-jack-setup“. Agent spustí `bin/doctor.sh` a opraví chyby podle [REPAIR.md](REPAIR.md).
+**Oprava:** když něco přestane fungovat, otevřete Codex nebo Claude Code a napište: „oprav mi nastavení Agent Jacka podle github.com/m-check1B/agent-jack-setup“. Agent spustí `bin/doctor.sh` (Windows: `bin/doctor.ps1`) a opraví chyby podle [REPAIR.md](REPAIR.md).
 
-**Prohlížeč pro agenty:** Google Chrome je povinný; rozšíření Claude in Chrome (Anthropic) a ChatGPT (OpenAI, pro Codex) doporučujeme, viz [BROWSER.md](BROWSER.md). **Codex CLI i Claude Code CLI** jsou povinné a instaluje je `install.sh` vždy. Doporučujeme přihlásit oba (`codex login` a `claude auth login`); každý zapne svůj lab („Local · Codex“, „Local · Claude Code“). S jedním přihlášeným instalace projde s upozorněním.
+**Prohlížeč pro agenty:** Google Chrome je povinný; rozšíření Claude in Chrome (Anthropic) a ChatGPT (OpenAI, pro Codex) doporučujeme, viz [BROWSER.md](BROWSER.md). **Codex CLI i Claude Code CLI** jsou povinné a instaluje je `install.sh` (Windows: `install.ps1`) vždy. Doporučujeme přihlásit oba (`codex login` a `claude auth login`); každý zapne svůj lab („Local · Codex“, „Local · Claude Code“). S jedním přihlášeným instalace projde s upozorněním.
 
 ### Doporučené nástroje (volitelné)
 Jen doporučení: `install.sh` je neinstaluje a DOCTOR je nekontroluje. Všechno z oficiálních zdrojů, s vlastním účtem.
 | Nástroj | K čemu s Agent Jackem | Odkaz | Cena |
 |---|---|---|---|
 | **Linear** | úkoly a evidence práce; do Claude Code ho připojíte oficiálním MCP konektorem | https://linear.app · https://linear.app/docs/mcp | zdarma základní plán, placené týmové plány |
-| **GitHub** | kód a repozitáře (i tento návod); příkaz `gh` přes `brew install gh` | https://github.com · https://cli.github.com | zdarma, placené plány pro týmy |
+| **GitHub** | kód a repozitáře (i tento návod); příkaz `gh` přes `brew install gh` (Windows: `winget install --id GitHub.cli -e --source winget`) | https://github.com · https://cli.github.com | zdarma, placené plány pro týmy |
 | **Thunderbird** | lokální poštovní klient: pošta zůstává na vašem počítači, takže s ní Claude může pracovat lokálně | https://www.thunderbird.net | zdarma |
 
 ### 3. Problém? Napište nám
@@ -92,6 +179,81 @@ Odpovězte na uvítací e-mail. Napište, u kterého kroku jste se zasekli, a p�
 
 This repository holds everything you need for setup. Every tool in it comes from a public source.
 
+### Fastest path: paste this into your AI
+Already using Codex, Claude Code or another AI agent? First back up your data (step 0) and sign in on the web (step 1). Then copy **one** block for your assistant, paste it there and send it. The agent fetches this guide at its pinned tag, detects your system, installs and checks everything, repairs what fails, and ends by telling you what works and what only you can do (sign-ins, 2FA codes, system permission dialogs, payments). It must never ask for your passwords or codes.
+
+**Codex (the Codex app, or `codex` in a terminal)**
+```text
+Set up Agent Jack on this computer for me. You are Codex.
+Work in the folder ~/Developer, keep permissions on "Ask for approval", never Full access.
+Ask me before every install, download or change; run network commands only with my approval.
+1. Get the guide at its pinned tag, and nothing from anywhere else (in the folder ~/Developer; create it).
+   git missing? macOS: xcode-select --install (I confirm the dialog). Windows: winget install --id Git.Git -e
+   --source winget --scope user, then start the SAME PowerShell command as the clone with this line
+   (each command is a new process; if it still fails, ask me to restart this app):
+   $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
+   git clone https://github.com/m-check1B/agent-jack-setup.git
+   cd agent-jack-setup ; git checkout v1.1.0
+2. Read AGENTS.md and follow its rules.
+3. Detect my operating system. macOS: follow SETUP-PROMPT.md.
+   Windows 11: follow SETUP-PROMPT-WINDOWS.md. Anything else: stop and tell me.
+4. Run the doctor. macOS: bin/doctor.sh. Windows:
+   powershell -NoProfile -ExecutionPolicy Bypass -File bin/doctor.ps1
+5. Fix each FAIL with REPAIR.md, then run the doctor again. If REPAIR.md has no fix, stop.
+6. Never ask for, type or store my passwords, keys or codes. For a sign-in, open the page
+   or command and wait until I finish.
+7. End with a plain report: what works, what does not, and the steps only I can do
+   (sign-ins, 2FA codes, system permission dialogs, payments). Below it, the last doctor output.
+```
+
+**Claude Code (the Claude app → Code tab, or `claude` in a terminal)**
+```text
+Set up Agent Jack on this computer for me. You are Claude Code.
+Stay on model Sonnet, effort high; don't switch to a more expensive model.
+Ask me before every install, download or change.
+1. Get the guide at its pinned tag, and nothing from anywhere else (in the folder ~/Developer; create it).
+   git missing? macOS: xcode-select --install (I confirm the dialog). Windows: winget install --id Git.Git -e
+   --source winget --scope user, then start the SAME PowerShell command as the clone with this line
+   (each command is a new process; if it still fails, ask me to restart this app):
+   $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
+   git clone https://github.com/m-check1B/agent-jack-setup.git
+   cd agent-jack-setup ; git checkout v1.1.0
+2. Read AGENTS.md and follow its rules.
+3. Detect my operating system. macOS: follow SETUP-PROMPT.md.
+   Windows 11: follow SETUP-PROMPT-WINDOWS.md. Anything else: stop and tell me.
+4. Run the doctor. macOS: bin/doctor.sh. Windows:
+   powershell -NoProfile -ExecutionPolicy Bypass -File bin/doctor.ps1
+5. Fix each FAIL with REPAIR.md, then run the doctor again. If REPAIR.md has no fix, stop.
+6. Never ask for, type or store my passwords, keys or codes. For a sign-in, open the page
+   or command and wait until I finish.
+7. End with a plain report: what works, what does not, and the steps only I can do
+   (sign-ins, 2FA codes, system permission dialogs, payments). Below it, the last doctor output.
+```
+
+**Any other AI agent that can run terminal commands (Cursor, Gemini CLI, …)**
+```text
+Set up Agent Jack on this computer for me. You run commands in a terminal.
+Don't switch to a more expensive model.
+Ask me before every install, download or change.
+1. Get the guide at its pinned tag, and nothing from anywhere else (in the folder ~/Developer; create it).
+   git missing? macOS: xcode-select --install (I confirm the dialog). Windows: winget install --id Git.Git -e
+   --source winget --scope user, then start the SAME PowerShell command as the clone with this line
+   (each command is a new process; if it still fails, ask me to restart this app):
+   $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
+   git clone https://github.com/m-check1B/agent-jack-setup.git
+   cd agent-jack-setup ; git checkout v1.1.0
+2. Read AGENTS.md and follow its rules.
+3. Detect my operating system. macOS: follow SETUP-PROMPT.md.
+   Windows 11: follow SETUP-PROMPT-WINDOWS.md. Anything else: stop and tell me.
+4. Run the doctor. macOS: bin/doctor.sh. Windows:
+   powershell -NoProfile -ExecutionPolicy Bypass -File bin/doctor.ps1
+5. Fix each FAIL with REPAIR.md, then run the doctor again. If REPAIR.md has no fix, stop.
+6. Never ask for, type or store my passwords, keys or codes. For a sign-in, open the page
+   or command and wait until I finish.
+7. End with a plain report: what works, what does not, and the steps only I can do
+   (sign-ins, 2FA codes, system permission dialogs, payments). Below it, the last doctor output.
+```
+
 ### 0. Back up first, and check disk space
 **Before you let AI run on your computer, back up your data** (Time Machine / File History / a copy of important folders off the computer). We recommend giving the agents a separate user account, or at least a separate folder (e.g. `~/Developer`). Before the first run: **a backup + enough disk space** (see below).
 
@@ -106,6 +268,18 @@ A Mac with an **Apple M3 chip or later**, **16 GB RAM** and a **512 GB disk**. O
 - **The next step for a company:** its own main Linux server, plus more edge devices of the same kind.
 - **Mac is preferred over Windows**, and a **laptop (MacBook) over a Mac mini**, because it moves with you.
 - **Mobile:** the Agent Jack app for iPhone and CarPlay is in testing; launch is planned by 1 December 2026.
+
+### What you get on Mac and on Windows today
+| | Mac | Windows 11 |
+|---|---|---|
+| Agent Jack app | **signed and notarised** (Apple); it opens without a warning | the installer is **not signed yet**, so Windows shows SmartScreen "Windows protected your PC": click **More info** → check the name `AgentJack-Setup-…exe` → **Run anyway**. **Before that**, check its fingerprint: `Get-FileHash -Algorithm SHA256 "$HOME\Downloads\AgentJack-Setup-<version>.exe"` must match the SHA-256 shown on the downloads page |
+| Where to get it | **only** inside the signed-in web app, https://agentjack.kraliki.com/downloads; never from GitHub | the same |
+| What you start with | the Agent Jack app + the Bot on Local and on our server | the **Agent Jack app**, signed in, with the Bot on **our server** (Provider → Server) |
+| Local Bot (on your computer) | yes (Codex and Claude Code in T3 Code TPLUS) | **waits for a Windows build of T3 Code TPLUS**; until then the Bot runs on our server and doctor shows WAIT (not FAIL) |
+| T3 Code TPLUS | released (not notarised yet: the first time, right-click → **Open**) | the Windows build is **not released yet**; doctor shows WAIT AJ-PIN-00 |
+| Tentacles | yes | yes (pinned tag, linked with `npm link` so the app finds it); ready only once T3 Code TPLUS is there (WAIT AJ-TENT-03 until then) |
+| Codex CLI, Claude Code CLI, estate-classify, Chrome | yes | yes |
+| Guide status | proven path | proof run scheduled; proven on: _<to be filled in>_ |
 
 ### 1. Sign in to Agent Jack (browser only)
 1. Open https://agentjack.kraliki.com/app
@@ -140,9 +314,9 @@ Agent Jack can also run Bots on your own computer, on your own AI subscription.
 
 **Steps:**
 1. Get both plans (or one for now), install the Codex and Claude apps and sign in.
-2. Open the guide for your system, copy the **whole** text, paste it into one of the apps (Codex or Claude Code) and send it:
+2. Paste one of the blocks above (fastest path), or open the guide for your system, copy the **whole** text, paste it into one of the apps (Codex or Claude Code) and send it:
    - **Mac (proven path):** [SETUP-PROMPT.md](SETUP-PROMPT.md)
-   - **Windows (not yet proven):** [SETUP-PROMPT-WINDOWS.md](SETUP-PROMPT-WINDOWS.md)
+   - **Windows 11 (proof run scheduled; the Bot runs on our server for now):** [SETUP-PROMPT-WINDOWS.md](SETUP-PROMPT-WINDOWS.md)
    The guides are in Czech; the agent answers in the language you write to it in.
 3. The agent walks you through it step by step, asks before each change and checks each step itself. You always type passwords and sign-ins yourself.
 4. At the end it prints a **DOCTOR report**. Paste it into your reply to the welcome email. That way we can see what works without ever needing access to your machine.
@@ -150,18 +324,18 @@ Agent Jack can also run Bots on your own computer, on your own AI subscription.
 
 **Pinned versions:** we install exactly the combination we tested ourselves ([VERSIONS.md](VERSIONS.md)). Nothing updates by itself; a new version ships as a new tag of this repo.
 
-**Repair:** if something stops working, open Codex or Claude Code and say "repair my Agent Jack setup using github.com/m-check1B/agent-jack-setup". It runs `bin/doctor.sh` and fixes each FAIL with [REPAIR.md](REPAIR.md).
+**Repair:** if something stops working, open Codex or Claude Code and say "repair my Agent Jack setup using github.com/m-check1B/agent-jack-setup". It runs `bin/doctor.sh` (Windows: `bin/doctor.ps1`) and fixes each FAIL with [REPAIR.md](REPAIR.md).
 
 **For agents:** start at [AGENTS.md](AGENTS.md).
 
-**Browser for agents:** Google Chrome is required; we recommend the Claude in Chrome (Anthropic) and ChatGPT (OpenAI, for Codex) extensions, see [BROWSER.md](BROWSER.md). **Codex CLI and Claude Code CLI** are both required and `install.sh` always installs them. We recommend signing in to both (`codex login` and `claude auth login`); each one enables its lab ("Local · Codex", "Local · Claude Code"). With only one signed in, the install passes with a warning.
+**Browser for agents:** Google Chrome is required; we recommend the Claude in Chrome (Anthropic) and ChatGPT (OpenAI, for Codex) extensions, see [BROWSER.md](BROWSER.md). **Codex CLI and Claude Code CLI** are both required and `install.sh` (Windows: `install.ps1`) always installs them. We recommend signing in to both (`codex login` and `claude auth login`); each one enables its lab ("Local · Codex", "Local · Claude Code"). With only one signed in, the install passes with a warning.
 
 ### Recommended tools (optional)
 Recommendations only: `install.sh` doesn't install them and DOCTOR doesn't check them. All from official sources, with your own account.
 | Tool | What it's for with Agent Jack | Link | Price |
 |---|---|---|---|
 | **Linear** | tasks and work ledger; connect it to Claude Code with its official MCP connector | https://linear.app · https://linear.app/docs/mcp | free basic plan, paid team plans |
-| **GitHub** | code and repos (including this guide); the `gh` CLI via `brew install gh` | https://github.com · https://cli.github.com | free, paid team plans |
+| **GitHub** | code and repos (including this guide); the `gh` CLI via `brew install gh` (Windows: `winget install --id GitHub.cli -e --source winget`) | https://github.com · https://cli.github.com | free, paid team plans |
 | **Thunderbird** | local email client: mail stays on your computer, so Claude can work with it locally | https://www.thunderbird.net | free |
 
 ### 3. Problems? Write to us
