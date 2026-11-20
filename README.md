@@ -24,7 +24,7 @@ Před každou instalací, stažením nebo změnou se mě zeptej; síťové pří
    (každý příkaz je nový proces; když to pořád nejde, požádej mě o restart této aplikace):
    $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
    git clone https://github.com/m-check1B/agent-jack-setup.git
-   cd agent-jack-setup ; git checkout v1.1.2
+   cd agent-jack-setup ; git checkout v1.1.3
 2. Přečti si AGENTS.md a řiď se jeho pravidly.
 3. Zjisti můj operační systém. macOS: postupuj podle SETUP-PROMPT.md.
    Windows 11: podle SETUP-PROMPT-WINDOWS.md. Jiný systém: zastav se a řekni mi to.
@@ -48,7 +48,7 @@ Před každou instalací, stažením nebo změnou se mě zeptej.
    (každý příkaz je nový proces; když to pořád nejde, požádej mě o restart této aplikace):
    $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
    git clone https://github.com/m-check1B/agent-jack-setup.git
-   cd agent-jack-setup ; git checkout v1.1.2
+   cd agent-jack-setup ; git checkout v1.1.3
 2. Přečti si AGENTS.md a řiď se jeho pravidly.
 3. Zjisti můj operační systém. macOS: postupuj podle SETUP-PROMPT.md.
    Windows 11: podle SETUP-PROMPT-WINDOWS.md. Jiný systém: zastav se a řekni mi to.
@@ -72,7 +72,7 @@ Před každou instalací, stažením nebo změnou se mě zeptej.
    (každý příkaz je nový proces; když to pořád nejde, požádej mě o restart této aplikace):
    $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
    git clone https://github.com/m-check1B/agent-jack-setup.git
-   cd agent-jack-setup ; git checkout v1.1.2
+   cd agent-jack-setup ; git checkout v1.1.3
 2. Přečti si AGENTS.md a řiď se jeho pravidly.
 3. Zjisti můj operační systém. macOS: postupuj podle SETUP-PROMPT.md.
    Windows 11: podle SETUP-PROMPT-WINDOWS.md. Jiný systém: zastav se a řekni mi to.
@@ -193,7 +193,7 @@ Ask me before every install, download or change; run network commands only with 
    (each command is a new process; if it still fails, ask me to restart this app):
    $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
    git clone https://github.com/m-check1B/agent-jack-setup.git
-   cd agent-jack-setup ; git checkout v1.1.2
+   cd agent-jack-setup ; git checkout v1.1.3
 2. Read AGENTS.md and follow its rules.
 3. Detect my operating system. macOS: follow SETUP-PROMPT.md.
    Windows 11: follow SETUP-PROMPT-WINDOWS.md. Anything else: stop and tell me.
@@ -217,7 +217,7 @@ Ask me before every install, download or change.
    (each command is a new process; if it still fails, ask me to restart this app):
    $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
    git clone https://github.com/m-check1B/agent-jack-setup.git
-   cd agent-jack-setup ; git checkout v1.1.2
+   cd agent-jack-setup ; git checkout v1.1.3
 2. Read AGENTS.md and follow its rules.
 3. Detect my operating system. macOS: follow SETUP-PROMPT.md.
    Windows 11: follow SETUP-PROMPT-WINDOWS.md. Anything else: stop and tell me.
@@ -241,7 +241,7 @@ Ask me before every install, download or change.
    (each command is a new process; if it still fails, ask me to restart this app):
    $env:Path = (($env:Path, [Environment]::GetEnvironmentVariable('Path', 'Machine'), [Environment]::GetEnvironmentVariable('Path', 'User')) -join ';' -split ';' | Where-Object { $_ } | Select-Object -Unique) -join ';'
    git clone https://github.com/m-check1B/agent-jack-setup.git
-   cd agent-jack-setup ; git checkout v1.1.2
+   cd agent-jack-setup ; git checkout v1.1.3
 2. Read AGENTS.md and follow its rules.
 3. Detect my operating system. macOS: follow SETUP-PROMPT.md.
    Windows 11: follow SETUP-PROMPT-WINDOWS.md. Anything else: stop and tell me.
