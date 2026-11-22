@@ -21,3 +21,4 @@ jobs:
           persist-credentials: false
       - run: python3 stack-lock/check-stack-lock.py --self-test
       - run: python3 stack-lock/check-stack-lock.py setup
+      - run: python3 tests/test_mac_scripts.py   # KRA-10893; set AJ_TEST_BASH to a bash 3.2.57 build

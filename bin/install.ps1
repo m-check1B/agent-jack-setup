@@ -96,13 +96,14 @@ function Do-Classify {
     if (-not $pick) { Die AJ-PY-01 "Python >= $($P.PYTHON_MIN) needed (winget install --id Python.Python.3.12 -e --source winget --scope user)" }
     Run $py @($pick, '-m', 'venv', $P.CLASSIFY_VENV) AJ-EC-01 'python venv failed'
   }
-  Run $vpy @('-m', 'pip', 'install', '-q', '--upgrade', '--force-reinstall', "git+$($P.GUARDIAN_REPO).git@$($P.GUARDIAN_TAG)") AJ-EC-01 'pip install of estate-classify failed'
+  Run $vpy @('-m', 'pip', 'install', '-q', '--upgrade', '--force-reinstall', "git+$($P.GUARDIAN_REPO).git@$($P.GUARDIAN_COMMIT)") AJ-EC-01 'pip install of estate-classify failed'
   "ok estate-classify @ $($P.GUARDIAN_TAG) in ~\.agent-jack\venv"
 }
 
 function Do-Guardian {
   Need-Pin $P.GUARDIAN_TAG GUARDIAN_TAG
-  Checkout $P.GUARDIAN_REPO (Join-Path $Dev 'estate-guardian') $P.GUARDIAN_TAG
+  Need-Pin $P.GUARDIAN_COMMIT GUARDIAN_COMMIT
+  Checkout $P.GUARDIAN_REPO (Join-Path $Dev 'estate-guardian') $P.GUARDIAN_COMMIT   # full commit, the tag is for display (audit 5)
   "ok estate-guardian guard checkout @ $($P.GUARDIAN_TAG) (optional; no scheduled task is created)"
 }
 

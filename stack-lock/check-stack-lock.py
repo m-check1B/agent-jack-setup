@@ -21,7 +21,10 @@ PENDING = "pending KRA-10845 proof"
 HISTORY_MARK = "KRA-10845 history"
 # A fork or patched-T3 requirement may appear only in history-marked files (agent-jack-3 mode).
 FORK_WORDS = re.compile(r"t3code-tplus|T3 Code TPLUS|never upstream|patched T3", re.I)
-FORK_SKIP = ("desktop/resources/tentacles/", "docs/LOCAL-STACK.md", "scripts/check-stack-lock.py", "stack.lock.json")
+FORK_SKIP = ("docs/LOCAL-STACK.md", "scripts/check-stack-lock.py", "stack.lock.json")
+# KRA-10868: the code that enforces the Tentacles minimum holds a copy of it; each copy equals the lock.
+MIN_DEF = re.compile(r"\bMIN_TENTACLES_VERSION\s*=\s*[\"']([^\"']+)[\"']")
+MIN_DIRS = ("desktop/src/", "api/src/")
 
 
 def git(root, *args):
@@ -49,19 +52,27 @@ def t3_errors(lock, where, version_found):
 
 def check_agent_jack_3(root, lock):
     errs = []
-    pin = json.loads((root / "desktop/resources/tentacles/PIN.json").read_text())
     tl = lock["tentacles"]
-    for key, pkey in (("version", "tentacles"), ("tag", "tag"), ("commit", "commit"), ("t3Contract", "t3Contract")):
-        if pin.get(pkey) != tl[key]:
-            errs.append(f"desktop/resources/tentacles/PIN.json: {pkey} {pin.get(pkey)!r} != lock tentacles.{key} {tl[key]!r} (bump the lock or the vendored Tentacles)")
+    files = (git(root, "ls-files") or "").splitlines()
+    copies = 0
+    for name in files:
+        if not (name.startswith(MIN_DIRS) and name.endswith((".mjs", ".py"))):
+            continue
+        for found in MIN_DEF.findall((root / name).read_text()):
+            copies += 1
+            if found != tl["minimum"]:
+                errs.append(f"{name}: MIN_TENTACLES_VERSION {found!r} != lock tentacles.minimum {tl['minimum']!r}")
+    if not copies:
+        errs.append("desktop/src, api/src: no MIN_TENTACLES_VERSION; the code must enforce lock tentacles.minimum")
     # The lock holds the compatibility set only: a desktop release cut never moves it.
     desktop, floor = json.loads((root / "desktop/package.json").read_text())["version"], lock["agentJackSetup"]["desktopMin"]
     if not (version(desktop) and version(floor) and version(desktop) >= version(floor)):
         errs.append(f"desktop/package.json: version {desktop!r} is below the lock's agentJackSetup.desktopMin {floor!r}")
-    fly = lock["flySandbox"]
-    if f"COPY {fly['tentacles']} " not in (root / "deploy/fly-sandbox/Dockerfile").read_text():
-        errs.append(f"deploy/fly-sandbox/Dockerfile: must COPY the locked Tentacles from {fly['tentacles']}")
-    files = (git(root, "ls-files") or "").splitlines()
+    # The sandbox image installs the tested tag from the public repo at build time.
+    docker = (root / "deploy/fly-sandbox/Dockerfile").read_text()
+    for line in (f"ARG TENTACLES_TAG={tl['tag']}", f"ARG TENTACLES_COMMIT={tl['commit']}", f"{tl['repo']}.git"):
+        if line not in docker:
+            errs.append(f"deploy/fly-sandbox/Dockerfile: must name {line} (lock tentacles)")
     for name in files:
         if name.startswith(FORK_SKIP) or not name.endswith((".md", ".txt", "Dockerfile", ".json", ".yaml", ".yml")):
             continue
@@ -76,16 +87,20 @@ def check_agent_jack_3(root, lock):
 
 def check_tentacles(root, lock):
     errs = []
-    for tl in {json.dumps(lock[k], sort_keys=True): lock[k] for k in ("tentacles", "managedTentacles")}.values():
-        tagged = git(root, "rev-parse", f"{tl['tag']}^{{commit}}")
-        if tagged != tl["commit"]:
-            errs.append(f"stack-lock/stack.lock.json: tag {tl['tag']} is {tagged or 'missing'}, lock says {tl['commit']}")
-            continue
+    tl = lock["tentacles"]
+    tagged = git(root, "rev-parse", f"{tl['tag']}^{{commit}}")
+    if tagged != tl["commit"]:
+        errs.append(f"stack-lock/stack.lock.json: tag {tl['tag']} is {tagged or 'missing'}, lock says {tl['commit']}")
+    else:
         pkg = json.loads(git(root, "show", f"{tl['commit']}:package.json") or "{}")
         if pkg.get("version") != tl["version"]:
             errs.append(f"stack-lock/stack.lock.json: package.json at {tl['tag']} is {pkg.get('version')!r}, lock says {tl['version']!r}")
         if git(root, "merge-base", "--is-ancestor", tl["commit"], "HEAD") is None:
             errs.append(f"stack-lock/stack.lock.json: locked commit {tl['commit'][:12]} is not in this branch")
+    # The minimum is a released tag too, older than or equal to the tested one.
+    floor = git(root, "rev-parse", f"v{tl['minimum']}^{{commit}}")
+    if floor is None or git(root, "merge-base", "--is-ancestor", floor, tl["commit"]) is None:
+        errs.append(f"stack-lock/stack.lock.json: minimum v{tl['minimum']} is not a tag at or before {tl['tag']}")
     support = root / "src/t3-support.mjs"
     t3 = lock["t3"]
     if support.exists():
@@ -110,7 +125,7 @@ def check_setup(root, lock):
         if "=" in line:
             k, v = line.split("=", 1)
             env[k.strip()] = v.strip().strip('"')
-    tl, st = lock["managedTentacles"], lock["agentJackSetup"]
+    tl, st = lock["tentacles"], lock["agentJackSetup"]
     want = {"SETUP_TAG": st["tag"], "JACK_DESKTOP_MIN": st["desktopMin"], "TENTACLES_TAG": tl["tag"],
             "TENTACLES_VERSION": tl["version"], "TENTACLES_COMMIT": tl["commit"]}
     errs = [f"versions.env: {k}={env.get(k)!r}, lock says {v!r}" for k, v in want.items() if env.get(k) != v]
@@ -132,7 +147,7 @@ def check_onboarding(root, lock):
         if tag != lock["agentJackSetup"]["tag"]:
             errs.append(f"{ob['guide']}: names setup {tag}, lock says {lock['agentJackSetup']['tag']}")
     if git(root, "merge-base", "--is-ancestor", ob["revision"], "HEAD") is None:
-        errs.append(f"internal/stack-lock/stack.lock.json: onboarding.revision {ob['revision'][:12]} is not in this branch")
+        errs.append(f"agent-jack/stack-lock/stack.lock.json: onboarding.revision {ob['revision'][:12]} is not in this branch")
     return errs
 
 
@@ -162,11 +177,12 @@ def self_test():
 
 def _self_test(base):
     lock = {"schema": 1, "revision": 1,
-            "tentacles": {"tag": "v0.5.0-x", "version": "0.5.0-x", "commit": "", "t3Contract": "c/v1"},
+            "tentacles": {"repo": "https://example.invalid/tentacles", "minimum": "0.5.0-x", "tag": "v0.5.0-x",
+                          "version": "0.5.0-x", "commit": "", "t3Contract": "c/v1"},
             "t3": {"publisherRepo": "https://example.invalid/t3", "tag": PENDING, "minimum": PENDING, "testedThrough": PENDING},
             "agentJackSetup": {"tag": "v1.0.0", "desktopMin": "1.2.0"},
             "onboarding": {"guide": "g.md", "revision": "", "desktopVersion": "1.2.3"},
-            "flySandbox": {"tentacles": "desktop/resources/tentacles"}}
+            "flySandbox": {}}
 
     def repo(files):
         d = Path(tempfile.mkdtemp(dir=base))
@@ -182,11 +198,10 @@ def _self_test(base):
     t, head = repo({"package.json": '{"version": "0.5.0-x"}'})
     git(t, "tag", "v0.5.0-x")
     lock["tentacles"]["commit"] = head
-    lock["managedTentacles"] = dict(lock["tentacles"])
     o, lock["onboarding"]["revision"] = repo({"g.md": "Written for **Agent Jack 1.2.3**. Run `git checkout v1.0.0`."})
-    pin = {"tentacles": "0.5.0-x", "tag": "v0.5.0-x", "commit": head, "t3Contract": "c/v1"}
-    j, _ = repo({"desktop/resources/tentacles/PIN.json": json.dumps(pin), "desktop/package.json": '{"version": "1.2.3"}',
-                 "deploy/fly-sandbox/Dockerfile": "COPY desktop/resources/tentacles /opt/t\n", "ok.md": "stock T3 only\n"})
+    docker = f"ARG TENTACLES_TAG=v0.5.0-x\nARG TENTACLES_COMMIT={head}\nRUN git clone https://example.invalid/tentacles.git\n"
+    j, _ = repo({"desktop/src/t.mjs": 'export const MIN_TENTACLES_VERSION = "0.5.0-x";\n', "desktop/package.json": '{"version": "1.2.3"}',
+                 "api/src/t.py": 'MIN_TENTACLES_VERSION = "0.5.0-x"\n', "deploy/fly-sandbox/Dockerfile": docker, "ok.md": "stock T3 only\n"})
     s, _ = repo({"versions.env": "SETUP_TAG=v1.0.0\nJACK_DESKTOP_MIN=1.2.0  # c\nTENTACLES_TAG=v0.5.0-x\n"
                  f"TENTACLES_VERSION=0.5.0-x\nTENTACLES_COMMIT={head}\nT3_REPO=https://fork.invalid\nT3_VERSION=0.0.1\n"})
     roots = {"agent-jack-3": j, "tentacles": t, "setup": s, "onboarding": o}
@@ -206,6 +221,13 @@ def _self_test(base):
     (j / "desktop/package.json").write_text('{"version": "1.1.9"}')
     assert run("agent-jack-3", j, j)[0].startswith("desktop/package.json: version '1.1.9' is below")
     (j / "desktop/package.json").write_text('{"version": "1.2.3"}')
+    # A minimum copy that drifted, or a sandbox image on another tag, names its file.
+    (j / "api/src/t.py").write_text('MIN_TENTACLES_VERSION = "0.4.0"\n')
+    assert run("agent-jack-3", j, j)[0].startswith("api/src/t.py: MIN_TENTACLES_VERSION '0.4.0'")
+    (j / "api/src/t.py").write_text('MIN_TENTACLES_VERSION = "0.5.0-x"\n')
+    (j / "deploy/fly-sandbox/Dockerfile").write_text(docker.replace("v0.5.0-x", "v0.5.0-w"))
+    assert run("agent-jack-3", j, j)[0].startswith("deploy/fly-sandbox/Dockerfile: must name ARG TENTACLES_TAG")
+    (j / "deploy/fly-sandbox/Dockerfile").write_text(docker)
     (s / "versions.env").write_text((s / "versions.env").read_text().replace("v1.0.0", "v1.0.1"))
     assert run("setup", s, s)[0].startswith("versions.env: SETUP_TAG")
     (o / "g.md").write_text("Written for **Agent Jack 1.2.3**. Run `git checkout v9.9.9`.")
@@ -222,10 +244,14 @@ def _self_test(base):
         support.update(testedThrough="0.1.12", testedTag="v0.1.12")
         (t / "src/t3-support.mjs").write_text(f"export const T3_SUPPORT = Object.freeze({json.dumps(support)});\n")
         assert len(run("tentacles", t, t)) == 2
+    lock["tentacles"]["minimum"] = "0.4.9"
+    (t / "stack.lock.json").write_text(json.dumps(lock))
+    assert any(e.endswith("minimum v0.4.9 is not a tag at or before v0.5.0-x") for e in run("tentacles", t, t))
+    lock["tentacles"]["minimum"] = "0.5.0-x"
     (s / "stack.lock.json").write_text(json.dumps(lock))
     assert any("T3_REPO" in e for e in run("setup", s, s)) and any("outside the lock range" in e for e in run("setup", s, s))
-    # A managed Tentacles bump the setup has not taken yet.
-    lock["managedTentacles"]["tag"] = "v0.5.0-y"
+    # A Tentacles bump the setup has not taken yet.
+    lock["tentacles"]["tag"] = "v0.5.0-y"
     (s / "stack.lock.json").write_text(json.dumps(lock))
     assert any(e.startswith("versions.env: TENTACLES_TAG") for e in run("setup", s, s))
     print("stack-lock self-test: OK")

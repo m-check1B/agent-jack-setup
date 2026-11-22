@@ -121,11 +121,15 @@ function Invoke-SelfTest($P, [string]$Here) {
   foreach ($k in @($P.Keys | Where-Object { $_ -like '*SHA256*' } | Sort-Object)) {
     $v = $P[$k]
     if ($v -eq 'TBD' -or $v -cmatch '^[0-9a-f]{64}$') { Ok "checksum $k" } else { Bad "checksum $k is not 64 lowercase hex or TBD" }
-    $a = $P[$k.Replace('SHA256', 'ASSET')]; if (-not $a) { $a = 'TBD' }
-    if (($a -eq 'TBD') -ne ($v -eq 'TBD')) { Bad "checksum $k and $($k.Replace('SHA256', 'ASSET')) disagree on TBD" }
+    if ($k -like 'T3_*') {   # T3 asset/checksum pairs agree on TBD; Node has no asset key (its own rule below)
+      $a = $P[$k.Replace('SHA256', 'ASSET')]; if (-not $a) { $a = 'TBD' }
+      if (($a -eq 'TBD') -ne ($v -eq 'TBD')) { Bad "checksum $k and $($k.Replace('SHA256', 'ASSET')) disagree on TBD" }
+    }
   }
   if ($P.TENTACLES_COMMIT -cmatch '^[0-9a-f]{40}$') { Ok 'commit TENTACLES_COMMIT' } else { Bad 'commit TENTACLES_COMMIT is not 40 hex' }
-  if ($P.GUARDIAN_COMMIT -cmatch '^[0-9a-f]{7,40}$') { Ok 'commit GUARDIAN_COMMIT' } else { Bad 'commit GUARDIAN_COMMIT is not hex' }
+  if ($P.GUARDIAN_COMMIT -cmatch '^[0-9a-f]{40}$') { Ok 'commit GUARDIAN_COMMIT' } else { Bad 'commit GUARDIAN_COMMIT is not 40 hex' }
+  if ($P.NODE_VERSION -cmatch '^[0-9]+\.[0-9]+\.[0-9]+$') { Ok 'node NODE_VERSION' } else { Bad 'node NODE_VERSION missing or not x.y.z (AJ-PIN-01)' }
+  foreach ($k in @('NODE_SHA256_MAC_ARM64', 'NODE_SHA256_MAC_X64')) { if ($P[$k] -cmatch '^[0-9a-f]{64}$') { Ok "node $k" } else { Bad "node $k missing or not 64 hex (AJ-PIN-01)" } }
   $wid = $P.CLAUDE_WINGET_ID
   $urls = @($P.SETUP_REPO, $P.T3_REPO, $P.TENTACLES_REPO, $P.GUARDIAN_REPO,
     "https://registry.npmjs.org/@openai/codex/$($P.CODEX_CLI_MIN)", "https://registry.npmjs.org/@anthropic-ai/claude-code/$($P.CLAUDE_CLI_MIN)",
