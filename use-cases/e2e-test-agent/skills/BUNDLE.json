@@ -1,0 +1,21 @@
+{
+  "schema": "jack.skill-bundle.v1",
+  "version": 1,
+  "skills": {
+    "webapp-e2e": {
+      "sha256": "b4e3124c98dcc3331aca4f0142f856d81e5284e496dc86e392e4c3cb48e368f8"
+    },
+    "api-contract-probe": {
+      "sha256": "1729358cda4304592013f3ac22feb90029fe942514297e2d48aa0aa36279e0a9"
+    },
+    "visual-a11y-audit": {
+      "sha256": "d747a95362fa235e9647a4e57455b7a7163fc178d560b47527897d3b4260a220"
+    },
+    "desktop-mobile-e2e": {
+      "sha256": "65707aae017146760283330c2e2d97f04b43f93512d04ceee2f6b3ce6b503f83"
+    },
+    "evidence-pack-verdict": {
+      "sha256": "05cfdc33db60b89d49a22185565b9b2ebdb6b79d54c9dd1884d7751e15d05bf9"
+    }
+  }
+}

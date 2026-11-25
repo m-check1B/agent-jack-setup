@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentjack.dev/schemas/e2e-verdict.v1.schema.json",
+  "title": "Agent Jack E2E Test Verdict v1",
+  "description": "Machine-readable verdict artifact emitted by the evidence-pack-verdict taught skill.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "app",
+    "environment",
+    "buildSha",
+    "runTimestampUtc",
+    "runnerSurface",
+    "approachesUsed",
+    "verdict",
+    "counts",
+    "rows",
+    "artifacts"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "jack.e2e-verdict.v1"
+    },
+    "app": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "targetUrlOrBundleId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "environment": {
+      "type": "string",
+      "enum": ["staging", "production", "local-fixture"]
+    },
+    "buildSha": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "runTimestampUtc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "runnerSurface": {
+      "type": "string",
+      "enum": ["paired-mac", "jack-cloud-computer", "fly-sandbox", "hybrid"]
+    },
+    "approachesUsed": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "webmcp",
+          "playwright-local",
+          "jack-browser",
+          "api-probe",
+          "cli-db-probe",
+          "visual-a11y",
+          "macos-native",
+          "electron-desktop",
+          "ios-simulator"
+        ]
+      }
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["PASS", "FAIL", "BLOCKED"]
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passed", "failed", "blocked", "notApplicable"],
+      "properties": {
+        "passed": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 },
+        "blocked": { "type": "integer", "minimum": 0 },
+        "notApplicable": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "journey", "approach", "status", "evidence"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9._-]{0,31}$"
+          },
+          "journey": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "approach": {
+            "type": "string",
+            "enum": [
+              "webmcp",
+              "playwright-local",
+              "jack-browser",
+              "api-probe",
+              "cli-db-probe",
+              "visual-a11y",
+              "macos-native",
+              "electron-desktop",
+              "ios-simulator"
+            ]
+          },
+          "viewport": {
+            "type": ["string", "null"],
+            "maxLength": 40
+          },
+          "theme": {
+            "type": ["string", "null"],
+            "enum": ["light", "dark", "both", null]
+          },
+          "locale": {
+            "type": ["string", "null"],
+            "maxLength": 20
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PASS", "FAIL", "BLOCKED", "N/A"]
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "gapId": {
+            "type": ["string", "null"],
+            "pattern": "^G([1-9]|10)$"
+          },
+          "linearIssue": {
+            "type": ["string", "null"],
+            "pattern": "^[A-Z]{2,10}-[0-9]+$"
+          }
+        }
+      }
+    },
+    "linearIssues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["action", "status", "title"],
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": ["created", "commented", "verified-fixed", "draft-awaiting-approval", "blocked"]
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "identifier": {
+            "type": ["string", "null"],
+            "pattern": "^[A-Z]{2,10}-[0-9]+$"
+          },
+          "url": {
+            "type": ["string", "null"],
+            "maxLength": 500
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "mediaType", "sha256"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "mediaType": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 120
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    "rerunCommand": {
+      "type": "string",
+      "maxLength": 2000
+    }
+  }
+}

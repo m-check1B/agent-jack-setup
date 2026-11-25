@@ -1,0 +1,128 @@
+{
+  "schema": "jack.use-case-toolbelt-preset.v1",
+  "id": "e2e-test-agent",
+  "version": "2.0.0",
+  "teamPackageV2": "team.v2.jack.md",
+  "teamPackageV1": "team.jack.md",
+  "description": "Declarative, non-secret capability, connector, WebMCP, and approval configuration for the Multi-Approach E2E Test Agent use-case on Agent Jack.",
+  "architecturalBoundary": "Pure Agent Jack Use-Case. No test-agent monolith in agent-jack-3 core. All permissions remain owner-granted per seat and Team ceiling (team.v2.jack.md requested_capabilities are held for explicit owner consent and never auto-granted).",
+  "bots": {
+    "e2e-lead": {
+      "recommendedSkills": [
+        "evidence-pack-verdict",
+        "webapp-e2e"
+      ],
+      "requestedCapabilities": [
+        "linear.read",
+        "linear.file_issue",
+        "artifact.attach"
+      ],
+      "mcpPlugins": [
+        "linear"
+      ],
+      "webmcpServers": [],
+      "recommendedRoute": "server-or-paired-mac",
+      "approvalPolicy": {
+        "linearFileIssue": "require-human-approval-never-auto-on-routine",
+        "linearIssueComment": "allow-with-audit",
+        "productionWrites": "never"
+      }
+    },
+    "web-api-tester": {
+      "recommendedSkills": [
+        "webapp-e2e",
+        "api-contract-probe",
+        "visual-a11y-audit",
+        "evidence-pack-verdict"
+      ],
+      "requestedCapabilities": [
+        "browser.use",
+        "http.probe",
+        "webmcp.call",
+        "artifact.attach",
+        "sandbox.fly"
+      ],
+      "mcpPlugins": [
+        "linear"
+      ],
+      "webmcpServers": [
+        "target-app-staging"
+      ],
+      "recommendedRoute": "server-for-http-probe-and-browser-observations-or-paired-mac-for-playwright-viewport-sweeps",
+      "approvalPolicy": {
+        "webmcpWritesStaging": "require-confirmation-gate",
+        "productionWrites": "never"
+      }
+    },
+    "native-app-tester": {
+      "recommendedSkills": [
+        "desktop-mobile-e2e",
+        "visual-a11y-audit",
+        "evidence-pack-verdict"
+      ],
+      "requestedCapabilities": [
+        "tentacles.hire",
+        "machines.dispatch",
+        "artifact.attach"
+      ],
+      "deviceBridgeReadOnlyVerbs": [
+        "app.status",
+        "window.screenshot",
+        "window.ax_tree"
+      ],
+      "mcpPlugins": [],
+      "webmcpServers": [],
+      "recommendedRoute": "paired-mac-required",
+      "pairedMacPrerequisites": [
+        "Agent Jack Desktop paired via Tentacles (Local Claude or Local Codex)",
+        "macOS Screen Recording permission (for window.screenshot)",
+        "macOS Accessibility permission (for window.ax_tree / AXUIElement)",
+        "Xcode Command Line Tools / iOS Simulator runtime (only for iOS Simulator rows)"
+      ],
+      "approvalPolicy": {
+        "nativeAppLaunch": "isolated-fixture-only",
+        "macOSLoginKeychain": "never",
+        "personalAccountAccess": "never"
+      }
+    }
+  },
+  "teamCeiling": {
+    "teamKey": "e2e-qa-team",
+    "allowedConnectors": [
+      "linear"
+    ],
+    "allowedWebmcpPattern": "webmcp:<seat-registered-staging-server>",
+    "forbiddenConnectors": [
+      "gmail",
+      "stripe",
+      "cloudflare"
+    ],
+    "note": "Keep the E2E Team ceiling strictly scoped to QA targets and bug tracking; never mount billing, production DNS, or personal mail connectors."
+  },
+  "artifactBudget": {
+    "maxAttachmentsPerTurn": 5,
+    "attachTool": "artifact.attach",
+    "recommendedPackLayout": [
+      "MATRIX.md",
+      "verdict.json",
+      "evidence-pack-<app>-<timestamp>.zip",
+      "screenshots/<failure-1>.png (optional inline)",
+      "screenshots/<failure-2>.png (optional inline)"
+    ]
+  },
+  "platformCapabilitiesMergedOnOriginMaster": {
+    "merged": [
+      "G1+G3 (#465): browser.console, browser.network, durable vision browser.screenshot",
+      "G5 (#464): http.probe bounded read-only HTTP with per-hop SSRF defense",
+      "G6 (#467): machines.dispatch consent-gated app.status, window.screenshot, window.ax_tree",
+      "G7 (#463): linear.file_issue approval-gated MCP tool",
+      "G9 (#466): jack.team v2 bundled skill_definitions & review-gated requested_capabilities",
+      "G10 (#469): artifact.attach direct TalkMediaStore promotion"
+    ],
+    "remainingNextWave": [
+      "G2: browser.snapshot, browser.set_viewport, browser.cookies (Paired Mac Playwright fallback works today)",
+      "G4: seat-admin staging egress allowlist",
+      "G8: owner-opted-in routine ability grants"
+    ]
+  }
+}

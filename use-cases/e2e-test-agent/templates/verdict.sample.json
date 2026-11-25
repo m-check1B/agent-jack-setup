@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "jack.e2e-verdict.v1",
+  "app": "example-staging-webapp",
+  "targetUrlOrBundleId": "https://staging.example.com",
+  "environment": "staging",
+  "buildSha": "e898f38d164f41d51e64ac9de2683c11ca6ce3dc",
+  "runTimestampUtc": "2026-11-24T10:30:00Z",
+  "runnerSurface": "paired-mac",
+  "approachesUsed": [
+    "webmcp",
+    "playwright-local",
+    "api-probe",
+    "visual-a11y",
+    "macos-native"
+  ],
+  "verdict": "BLOCKED",
+  "counts": {
+    "passed": 3,
+    "failed": 0,
+    "blocked": 1,
+    "notApplicable": 0
+  },
+  "rows": [
+    {
+      "id": "W-01",
+      "journey": "Health, TLS, and security headers",
+      "approach": "api-probe",
+      "viewport": null,
+      "theme": null,
+      "locale": null,
+      "status": "PASS",
+      "evidence": "GET /health -> 200 (38ms), HSTS + nosniff present, buildSha matched.",
+      "gapId": null,
+      "linearIssue": null
+    },
+    {
+      "id": "W-02",
+      "journey": "Signed-out landing, 404 page, responsive 360/390/1280 light/dark",
+      "approach": "visual-a11y",
+      "viewport": "390x844",
+      "theme": "both",
+      "locale": "en",
+      "status": "PASS",
+      "evidence": "0 console errors, 0 clipped controls, primary pane height 612px, WCAG contrast >= 4.5:1.",
+      "gapId": null,
+      "linearIssue": null
+    },
+    {
+      "id": "W-04",
+      "journey": "Signed-in primary workflow (fixture account)",
+      "approach": "playwright-local",
+      "viewport": "1280x800",
+      "theme": "light",
+      "locale": "en",
+      "status": "BLOCKED",
+      "evidence": "No staging fixture user provisioned for this tenant; row not executed.",
+      "gapId": null,
+      "linearIssue": null
+    },
+    {
+      "id": "N-01",
+      "journey": "macOS native app cold launch, signature, and Accessibility tree check",
+      "approach": "macos-native",
+      "viewport": null,
+      "theme": "dark",
+      "locale": "en",
+      "status": "PASS",
+      "evidence": "Paired Mac: codesign valid, 0 DiagnosticReports crashes, main window AX buttons visible.",
+      "gapId": null,
+      "linearIssue": null
+    }
+  ],
+  "linearIssues": [
+    {
+      "action": "draft-awaiting-approval",
+      "status": "pending human approval",
+      "identifier": null,
+      "url": null,
+      "title": "example-staging-webapp (staging): fixture user needed for signed-in E2E row W-04"
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "MATRIX.md",
+      "mediaType": "text/markdown",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "name": "verdict.json",
+      "mediaType": "application/json",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    {
+      "name": "evidence-pack-example-staging-webapp-20261124T103000Z.zip",
+      "mediaType": "application/zip",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  ],
+  "rerunCommand": "/webapp-e2e target=https://staging.example.com env=staging viewports=360,390,1280 themes=light,dark"
+}
